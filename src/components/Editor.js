@@ -48,10 +48,10 @@ const styles = {
 
 class Editor extends Component {
   state = {
-    selectedIndex: 0
+    editorTab: 0
   }
 
-  select = index => this.setState({ selectedIndex: index })
+  select = index => this.setState({ editorTab: index })
 
   render() {
     const tabs = [
@@ -66,9 +66,9 @@ class Editor extends Component {
 
     return (
       <Paper style={styles.paper}>
-        <div style={styles.container}>{tabs[this.state.selectedIndex]}</div>
+        <div style={styles.container}>{tabs[this.state.editorTab]}</div>
         <div style={styles.tabs}>
-          <BottomNavigation selectedIndex={this.state.selectedIndex}>
+          <BottomNavigation selectedIndex={this.state.editorTab}>
             <BottomNavigationItem
               icon={editIcon}
               onClick={() => this.select(0)}

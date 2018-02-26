@@ -4,7 +4,7 @@ import { composeWithDevTools } from "remote-redux-devtools"
 import reducers from "../reducers"
 
 const initialState = {
-  currentDialogue: null,
+  currentDialogue: 0,
   dialogues: [
     {
       title: "Start",
