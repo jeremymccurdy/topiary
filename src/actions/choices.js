@@ -5,7 +5,7 @@ export const newChoice = choice => {
   }
 }
 
-export const updateChoices = ({ index, choice }) => {
+export const updateChoice = ({ index, choice }) => {
   return {
     type: "UPDATE_CHOICE",
     index,

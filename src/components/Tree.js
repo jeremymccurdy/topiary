@@ -2,15 +2,18 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import { Paper, FontIcon, FloatingActionButton } from "material-ui"
-import Draggable from "react-draggable"
 import {
   newDialogue,
   updateDialogue,
   deleteDialogue,
+  newChoice,
+  updateChoice,
+  deleteChoice,
   currentDialogue,
   toggleEditor
 } from "../actions"
-import Dialogue from "./tree/Dialogue"
+import DialogueList from "./tree/DialogueList"
+import ChoiceList from "./tree/ChoiceList"
 
 const boundary = 5000
 const zoomStep = 0.03
@@ -56,9 +59,13 @@ const styles = {
 class Tree extends Component {
   static propTypes = {
     dialogues: PropTypes.arrayOf(PropTypes.object),
+    choices: PropTypes.arrayOf(PropTypes.object),
     newDialogue: PropTypes.func.isRequired,
     updateDialogue: PropTypes.func.isRequired,
     deleteDialogue: PropTypes.func.isRequired,
+    newChoice: PropTypes.func.isRequired,
+    updateChoice: PropTypes.func.isRequired,
+    deleteChoice: PropTypes.func.isRequired,
     currentDialogue: PropTypes.func.isRequired,
     toggleEditor: PropTypes.func.isRequired,
     actors: PropTypes.arrayOf(PropTypes.object),
@@ -80,22 +87,17 @@ class Tree extends Component {
       tags: [],
       body: "new dialogue",
       pos: [
-        window.pageXOffset - boundary / 2 + window.innerWidth / 2 - 100,
-        window.pageYOffset - boundary / 2 + window.innerHeight / 2 - 50
+        window.pageXOffset + window.innerWidth / 2 - 100,
+        window.pageYOffset + window.innerHeight / 2 - 50
       ],
       actor: 0
     })
   }
-
-  handleDialoguePositionUpdate = (event, data, index) => {
-    this.props.updateDialogue({
+  handleChoicePositionUpdate = (event, data, index) => {
+    this.props.updateChoice({
       index,
       dialogue: { pos: [data.lastX, data.lastY] }
     })
-  }
-
-  handleDialogueSelect = index => {
-    this.props.currentDialogue(index)
   }
 
   isNegative = n => {
@@ -120,70 +122,25 @@ class Tree extends Component {
   }
 
   render() {
-    const { dialogues, deleteDialogue, actors, meta } = this.props
+    const { meta } = this.props
     const { scale } = this.state
     const hideEditor = {
       transform: meta.editorHidden ? "translateX(28vw)" : "translateX(0)"
     }
-    const dialogueCards =
-      dialogues &&
-      dialogues.map((d, i) => {
-        return (
-          <Draggable
-            key={i}
-            defaultPosition={{
-              x: Math.round((d.pos[0] + boundary / 2) / gridSize) * gridSize,
-              y: Math.round((d.pos[1] + boundary / 2) / gridSize) * gridSize
-            }}
-            handle=".draggable"
-            grid={[gridSize, gridSize]}
-            onStop={(e, d) => this.handleDialoguePositionUpdate(e, d, i)}
-            onMouseDown={e => {
-              e.stopPropagation()
-              this.handleDialogueSelect(i)
-            }}
-          >
-            <div style={styles.dragContainer}>
-              <Dialogue
-                index={i}
-                title={d.title}
-                tags={d.tags}
-                body={d.body}
-                actor={actors[d.actor] && actors[d.actor].name}
-                color={actors[d.actor] && actors[d.actor].color}
-                deleteDialogue={deleteDialogue}
-              />
-            </div>
-          </Draggable>
-        )
-      })
     return (
       <Paper style={styles.container}>
         <div
           style={{
             transform: `scale(${scale})`,
-            transition: "transform 10ms ease"
+            transition: "transform 0ms linear"
           }}
           id="zoomGrid"
           onWheel={this.handleZoom}
         >
-          {/* 
-          Keep for possible pan effect
-
-          <Draggable
-            handle="#dragGrid"
-            defaultPosition={{ x: -(boundary / 2), y: -(boundary / 2) }}
-            bounds={{
-              left: -(boundary / 2),
-              top: -(boundary / 2),
-              right: boundary / 2,
-              bottom: boundary / 2
-            }}
-          > */}
           <div id="dragGrid" style={styles.dragGrid}>
-            {dialogues && dialogueCards}
+            <DialogueList {...this.props} gridSize={gridSize} />
+            <ChoiceList {...this.props} gridSize={gridSize} />
           </div>
-          {/* </Draggable> */}
         </div>
         <div style={{ ...styles.buttonContainer, ...hideEditor }}>
           <FloatingActionButton
@@ -210,6 +167,7 @@ class Tree extends Component {
 const mapStateToProps = state => {
   return {
     dialogues: state.dialogues,
+    choices: state.choices,
     actors: state.actors,
     meta: state.meta
   }
@@ -219,6 +177,9 @@ export default connect(mapStateToProps, {
   newDialogue,
   updateDialogue,
   deleteDialogue,
+  newChoice,
+  updateChoice,
+  deleteChoice,
   currentDialogue,
   toggleEditor
 })(Tree)

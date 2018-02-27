@@ -10,51 +10,57 @@ const initialState = {
       title: "Start",
       tags: ["Intro", "test"],
       body: "And so our adventure begins...",
-      pos: [0, -2400],
+      pos: [2310, 90],
       actor: 0,
       conditions: "Game.Start == true",
-      choices: [0, 1, 2]
+      next: ["choices[0]", "choices[1]", "choices[2]"]
     },
     {
       title: "Home",
       tags: [],
       body: "You stay at home and do nothing.",
-      pos: [-300, -2000],
+      pos: [2000, 500],
       actor: 0,
       conditions: "",
-      choices: []
+      next: []
     },
     {
       title: "Venture",
       tags: [],
       body: "You go out and die from a squirrel bite.",
-      pos: [0, -2000],
+      pos: [2310, 500],
       actor: 0,
       conditions: "",
-      choices: []
+      next: []
     },
     {
       title: "Cheat",
       tags: [],
       body: "You are a cheater! But well played.",
-      pos: [300, -2000],
+      pos: [2610, 500],
       actor: 0,
       conditions: "",
-      choices: []
+      next: []
     }
   ],
   choices: [
     {
       body: "I stay at home...",
-      dialogue: 1
+      tags: [],
+      next: ["dialogues[1]"],
+      pos: [2000, 360]
     },
     {
-      body: "I venture forth!",
-      dialogue: 2
+      body: "I venture forth and begin my adventure!",
+      tags: [],
+      next: ["dialogues[2]"],
+      pos: [2310, 360]
     },
     {
       body: "I use cheat codes",
-      dialogue: 3,
+      tags: [],
+      next: ["dialogues[3]"],
+      pos: [2610, 360],
       conditions: "cheater == true"
     }
   ],
