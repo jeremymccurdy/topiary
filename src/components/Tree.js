@@ -23,11 +23,15 @@ const styles = {
     width: "70vw",
     height: "100vh"
   },
-  button: {
+  buttonContainer: {
     position: "fixed",
-    left: "calc(70vw - 80px)",
+    left: "calc(70vw - 140px)",
     top: "calc(100vh - 80px)",
-    transition: "transform 900ms cubic-bezier(0.445, 0.05, 0.55, 0.95) 0ms"
+    transition: "transform 900ms cubic-bezier(0.445, 0.05, 0.55, 0.95) 0ms",
+    display: "inline"
+  },
+  button: {
+    margin: "5px"
   },
   // dialogueContainer: {
   //   width: "210px"
@@ -181,13 +185,23 @@ class Tree extends Component {
           </div>
           {/* </Draggable> */}
         </div>
-        <FloatingActionButton
-          style={{ ...styles.button, ...hideEditor }}
-          onClick={this.handleNewDialogue}
-          secondary
-        >
-          <FontIcon className="material-icons md-48">add</FontIcon>
-        </FloatingActionButton>
+        <div style={{ ...styles.buttonContainer, ...hideEditor }}>
+          <FloatingActionButton
+            mini={true}
+            onClick={this.handleNewChoice}
+            style={styles.button}
+            secondary
+          >
+            <FontIcon className="material-icons">question_answer</FontIcon>
+          </FloatingActionButton>
+          <FloatingActionButton
+            style={styles.button}
+            onClick={this.handleNewDialogue}
+            secondary
+          >
+            <FontIcon className="material-icons md-48">chat</FontIcon>
+          </FloatingActionButton>
+        </div>
       </Paper>
     )
   }

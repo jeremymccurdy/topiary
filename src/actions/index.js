@@ -1,6 +1,7 @@
 export * from "./currentDialogue"
 export * from "./actors"
 export * from "./dialogues"
+export * from "./choices"
 export * from "./keys"
 export * from "./colors"
 export * from "./meta"
