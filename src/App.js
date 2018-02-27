@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import { MuiThemeProvider, getMuiTheme } from "material-ui/styles/"
 import Editor from "./components/Editor"
 import Tree from "./components/Tree"
+import Nav from "./components/Nav"
 
 const muiTheme = getMuiTheme({
   palette: {
@@ -20,6 +21,7 @@ class App extends Component {
         <div>
           <Tree />
           <Editor />
+          <Nav />
         </div>
       </MuiThemeProvider>
     )

@@ -13,9 +13,10 @@ import Dialogue from "./tree/Dialogue"
 
 const boundary = 5000
 const zoomStep = 0.03
+const gridSize = 30
+
 const styles = {
   container: {
-    position: "fixed",
     top: 0,
     left: 0,
     width: "70vw",
@@ -26,20 +27,23 @@ const styles = {
     left: "calc(70vw - 80px)",
     top: "calc(100vh - 80px)"
   },
-  dialogueContainer: {
-    width: "200px"
-  },
+  // dialogueContainer: {
+  //   width: "210px"
+  // },
   dragContainer: {
-    width: "200px",
+    width: "210px",
     position: "absolute"
   },
   dragGrid: {
     position: "absolute",
     minHeight: boundary,
     minWidth: boundary,
-    backgroundColor: "lightgrey",
+    backgroundColor: "white",
     overflow: "scroll",
-    display: "block"
+    display: "block",
+    backgroundSize: `${gridSize}px ${gridSize}px`,
+    backgroundImage:
+      "linear-gradient(to right, #EEEEEE 1px, transparent 1px), linear-gradient(to bottom, #EEEEEE 1px, transparent 1px)"
   }
 }
 
@@ -63,9 +67,12 @@ class Tree extends Component {
   handleNewDialogue = () => {
     this.props.newDialogue({
       title: "New",
-      tags: "",
+      tags: [],
       body: "new dialogue",
-      pos: [0, 0],
+      pos: [
+        window.pageXOffset - boundary / 2 + window.innerWidth / 2 - 100,
+        window.pageYOffset - boundary / 2 + window.innerHeight / 2 - 50
+      ],
       actor: 0
     })
   }
@@ -92,18 +99,19 @@ class Tree extends Component {
     e.preventDefault()
     const direction =
       this.isNegative(e.deltaX) && this.isNegative(e.deltaY) ? "down" : "up"
-    if (direction == "up") {
+    if (direction === "up") {
       this.setState({ scale: this.state.scale + zoomStep })
     } else {
       this.setState({ scale: this.state.scale - zoomStep })
     }
-    if (this.state.scale < 0.1) {
-      this.setState({ scale: 0.1 })
+    if (this.state.scale < 0.3) {
+      this.setState({ scale: 0.3 })
     }
   }
 
   render() {
     const { dialogues, deleteDialogue, actors } = this.props
+    const { scale } = this.state
     const dialogueCards =
       dialogues &&
       dialogues.map((d, i) => {
@@ -111,10 +119,11 @@ class Tree extends Component {
           <Draggable
             key={i}
             defaultPosition={{
-              x: d.pos[0] + boundary / 2,
-              y: d.pos[1] + boundary / 2
+              x: Math.round((d.pos[0] + boundary / 2) / gridSize) * gridSize,
+              y: Math.round((d.pos[1] + boundary / 2) / gridSize) * gridSize
             }}
             handle=".draggable"
+            grid={[gridSize, gridSize]}
             onStop={(e, d) => this.handleDialoguePositionUpdate(e, d, i)}
             onMouseDown={e => {
               e.stopPropagation()
@@ -137,10 +146,16 @@ class Tree extends Component {
     return (
       <Paper style={styles.container}>
         <div
-          style={{ transform: `scale(${this.state.scale})` }}
+          style={{
+            transform: `scale(${scale})`,
+            transition: "transform 10ms ease"
+          }}
           id="zoomGrid"
           onWheel={this.handleZoom}
         >
+          {/* 
+          Keep for possible pan effect
+
           <Draggable
             handle="#dragGrid"
             defaultPosition={{ x: -(boundary / 2), y: -(boundary / 2) }}
@@ -150,11 +165,11 @@ class Tree extends Component {
               right: boundary / 2,
               bottom: boundary / 2
             }}
-          >
-            <div id="dragGrid" style={styles.dragGrid}>
-              {dialogues && dialogueCards}
-            </div>
-          </Draggable>
+          > */}
+          <div id="dragGrid" style={styles.dragGrid}>
+            {dialogues && dialogueCards}
+          </div>
+          {/* </Draggable> */}
         </div>
         <FloatingActionButton
           style={styles.button}

@@ -8,9 +8,9 @@ const initialState = {
   dialogues: [
     {
       title: "Start",
-      tags: "",
+      tags: ["Intro", "test"],
       body: "And so our adventure begins",
-      pos: [20, 20],
+      pos: [0, -2400],
       actor: 0
     }
   ],
