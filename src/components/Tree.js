@@ -136,7 +136,8 @@ class Tree extends Component {
                 title={d.title}
                 tags={d.tags}
                 body={d.body}
-                color={actors[d.actor].color || "FFFFFF"}
+                actor={actors[d.actor] && actors[d.actor].name}
+                color={actors[d.actor] && actors[d.actor].color}
                 deleteDialogue={deleteDialogue}
               />
             </div>

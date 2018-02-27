@@ -11,7 +11,8 @@ const initialState = {
       tags: ["Intro", "test"],
       body: "And so our adventure begins",
       pos: [0, -2400],
-      actor: 0
+      actor: 0,
+      conditions: "Game.Start == true"
     }
   ],
   actors: [{ name: "Narrator", playable: false, color: "FFFFFF" }],

@@ -68,15 +68,20 @@ const styles = {
 
 class Dialogue extends Component {
   static propTypes = {
-    title: PropTypes.string.isRequired,
+    title: PropTypes.string,
     tags: PropTypes.arrayOf(PropTypes.string),
-    body: PropTypes.string.isRequired,
-    color: PropTypes.string.isRequired,
+    body: PropTypes.string,
+    color: PropTypes.string,
     index: PropTypes.number.isRequired,
+    actor: PropTypes.string,
     deleteDialogue: PropTypes.func.isRequired
   }
   static defaultProps = {
-    tags: []
+    title: "",
+    tags: [],
+    actor: "",
+    color: "FFFFFF",
+    body: ""
   }
   state = {
     expanded: true,
@@ -92,7 +97,15 @@ class Dialogue extends Component {
   }
 
   render() {
-    const { index, title, tags, body, deleteDialogue, color } = this.props
+    const {
+      index,
+      title,
+      tags,
+      body,
+      deleteDialogue,
+      color,
+      actor
+    } = this.props
     const chipTags = tags.map(tag => (
       <Chip key={tag} style={styles.tagChip} labelStyle={styles.tag}>
         {tag}
@@ -102,7 +115,6 @@ class Dialogue extends Component {
     const corner = (
       <Draggable
         axis="x"
-        style={styles.corner}
         grid={[30, 30]}
         onDrag={(e, d) => this.adjustWidth(e, d)}
       >
@@ -133,6 +145,7 @@ class Dialogue extends Component {
       >
         <CardHeader
           title={title}
+          subtitle={actor}
           showExpandableButton
           style={{
             fontWeight: "bold",

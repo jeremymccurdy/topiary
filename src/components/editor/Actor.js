@@ -80,6 +80,12 @@ class ActorTab extends Component {
     ))
     return (
       <div style={styles.tabContent}>
+        <FlatButton label="New" primary={true} onClick={this.handleNewActor} />
+        <FlatButton
+          label="Delete"
+          primary={true}
+          onClick={() => deleteActor(actorIndex)}
+        />
         <SelectField
           name="Actors"
           value={actorIndex}
@@ -90,12 +96,6 @@ class ActorTab extends Component {
         >
           {menuItems}
         </SelectField>
-        <FlatButton label="New" primary={true} onClick={this.handleNewActor} />
-        <FlatButton
-          label="Delete"
-          primary={true}
-          onClick={() => deleteActor(actorIndex)}
-        />
         <TextField
           name="Name"
           fullWidth
@@ -112,10 +112,11 @@ class ActorTab extends Component {
           floatingLabelFixed
           floatingLabelText={<span>Color</span>}
           labelStyle={{
-            backgroundColor: `#${actors[actorIndex].color}`,
+            backgroundColor: `#${actors[actorIndex] &&
+              actors[actorIndex].color}`,
             transform: "scale(0.8, 0.3) translate(-20px, 0)"
           }}
-          label={actors[actorIndex].color}
+          // label={actors[actorIndex].color}
           onChange={this.handleActorColorUpdate}
         >
           {colors.map(color => (

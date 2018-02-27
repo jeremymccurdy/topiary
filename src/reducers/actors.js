@@ -9,7 +9,7 @@ const actors = (state = [], action) => {
         })
       })
     case "DELETE_ACTOR":
-      return state.filter((actor, i) => i !== action.payload)
+      return state.filter((actor, i) => i !== action.index)
     default:
       return state
   }

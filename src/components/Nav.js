@@ -6,15 +6,21 @@ const styles = {
     position: "fixed",
     top: 0,
     left: 0,
-    width: "70vw",
+    width: "30vw",
     backgroundColor: "rgba(0, 0, 0, 0)"
   },
   textField: {
     marginRight: "30px",
-    width: "60vw"
+    width: "30vw"
   },
   textStyle: {
     fontFamily: "Roboto Mono"
+  },
+  icon: {
+    width: 30,
+    height: 30,
+    stroke: "green",
+    color: "green"
   }
 }
 
@@ -27,7 +33,6 @@ class Nav extends Component {
           <TextField
             name="scene"
             fullWidth
-            underlineShow={false}
             style={styles.textField}
             textareaStyle={styles.textStyle}
             hintText="Scene"
