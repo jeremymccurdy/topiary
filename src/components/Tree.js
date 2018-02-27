@@ -7,7 +7,8 @@ import {
   newDialogue,
   updateDialogue,
   deleteDialogue,
-  currentDialogue
+  currentDialogue,
+  toggleEditor
 } from "../actions"
 import Dialogue from "./tree/Dialogue"
 
@@ -25,7 +26,8 @@ const styles = {
   button: {
     position: "fixed",
     left: "calc(70vw - 80px)",
-    top: "calc(100vh - 80px)"
+    top: "calc(100vh - 80px)",
+    transition: "transform 900ms cubic-bezier(0.445, 0.05, 0.55, 0.95) 0ms"
   },
   // dialogueContainer: {
   //   width: "210px"
@@ -54,7 +56,11 @@ class Tree extends Component {
     updateDialogue: PropTypes.func.isRequired,
     deleteDialogue: PropTypes.func.isRequired,
     currentDialogue: PropTypes.func.isRequired,
-    actors: PropTypes.arrayOf(PropTypes.object)
+    toggleEditor: PropTypes.func.isRequired,
+    actors: PropTypes.arrayOf(PropTypes.object),
+    meta: PropTypes.shape({
+      editorHidden: PropTypes.bool.isRequired
+    })
   }
   static defaultProps = {
     dialogues: []
@@ -110,8 +116,11 @@ class Tree extends Component {
   }
 
   render() {
-    const { dialogues, deleteDialogue, actors } = this.props
+    const { dialogues, deleteDialogue, actors, meta } = this.props
     const { scale } = this.state
+    const hideEditor = {
+      transform: meta.editorHidden ? "translateX(28vw)" : "translateX(0)"
+    }
     const dialogueCards =
       dialogues &&
       dialogues.map((d, i) => {
@@ -173,7 +182,7 @@ class Tree extends Component {
           {/* </Draggable> */}
         </div>
         <FloatingActionButton
-          style={styles.button}
+          style={{ ...styles.button, ...hideEditor }}
           onClick={this.handleNewDialogue}
           secondary
         >
@@ -187,7 +196,8 @@ class Tree extends Component {
 const mapStateToProps = state => {
   return {
     dialogues: state.dialogues,
-    actors: state.actors
+    actors: state.actors,
+    meta: state.meta
   }
 }
 
@@ -195,5 +205,6 @@ export default connect(mapStateToProps, {
   newDialogue,
   updateDialogue,
   deleteDialogue,
-  currentDialogue
+  currentDialogue,
+  toggleEditor
 })(Tree)

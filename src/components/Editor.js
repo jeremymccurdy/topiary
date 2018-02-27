@@ -6,9 +6,12 @@ import {
   FontIcon,
   IconButton
 } from "material-ui"
+import PropTypes from "prop-types"
+import { connect } from "react-redux"
 import EditTab from "./editor/Edit"
 import ActorTab from "./editor/Actor"
 import KeyTab from "./editor/Key"
+import { toggleEditor } from "../actions"
 
 const menuIcon = <FontIcon className="material-icons">menu</FontIcon>
 const editIcon = <FontIcon className="material-icons">mode_edit</FontIcon>
@@ -56,6 +59,12 @@ const styles = {
 }
 
 class Editor extends Component {
+  static propTypes = {
+    meta: PropTypes.shape({
+      editorHidden: PropTypes.bool.isRequired
+    }),
+    toggleEditor: PropTypes.func.isRequired
+  }
   state = {
     editorTab: 0,
     hidden: false
@@ -63,13 +72,10 @@ class Editor extends Component {
 
   select = index => this.setState({ editorTab: index })
 
-  toggleEditor = () => {
-    this.setState({ hidden: !this.state.hidden })
-  }
-
   render() {
-    const hide = {
-      transform: this.state.hidden ? "translateX(28vw)" : "translateX(0)"
+    const { meta, toggleEditor } = this.props
+    const hideEditor = {
+      transform: meta.editorHidden ? "translateX(28vw)" : "translateX(0)"
     }
     const tabs = [
       <EditTab key={0} />,
@@ -85,7 +91,7 @@ class Editor extends Component {
     ]
 
     return (
-      <Paper style={{ ...styles.paper, ...hide }}>
+      <Paper style={{ ...styles.paper, ...hideEditor }}>
         <div style={styles.container}>{tabs[this.state.editorTab]}</div>
         <div style={styles.tabs}>
           <BottomNavigation selectedIndex={this.state.editorTab}>
@@ -111,7 +117,10 @@ class Editor extends Component {
             />
           </BottomNavigation>
         </div>
-        <IconButton iconStyle={styles.menuButton} onClick={this.toggleEditor}>
+        <IconButton
+          iconStyle={styles.menuButton}
+          onClick={() => toggleEditor(!meta.editorHidden)}
+        >
           {menuIcon}
         </IconButton>
       </Paper>
@@ -119,4 +128,10 @@ class Editor extends Component {
   }
 }
 
-export default Editor
+const mapStateToProps = state => {
+  return {
+    meta: state.meta
+  }
+}
+
+export default connect(mapStateToProps, { toggleEditor })(Editor)
