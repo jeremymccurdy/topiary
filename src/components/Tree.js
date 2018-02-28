@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
-import { Paper, FontIcon, FloatingActionButton } from "material-ui"
+import { FontIcon, FloatingActionButton } from "material-ui"
 import {
   newDialogue,
   updateDialogue,
@@ -14,6 +14,7 @@ import {
 } from "../actions"
 import DialogueList from "./tree/DialogueList"
 import ChoiceList from "./tree/ChoiceList"
+import LinkList from "./tree/LinkList"
 
 const boundary = 5000
 const zoomStep = 0.03
@@ -36,26 +37,21 @@ const styles = {
   button: {
     margin: "5px"
   },
-  // dialogueContainer: {
-  //   width: "210px"
-  // },
   dragContainer: {
     width: "210px",
     position: "absolute"
   },
   dragGrid: {
-    position: "absolute",
+    position: "relative",
     minHeight: boundary,
     minWidth: boundary,
     backgroundColor: "white",
-    overflow: "scroll",
     display: "block",
     backgroundSize: `${gridSize}px ${gridSize}px`,
     backgroundImage:
       "linear-gradient(to right, #EEEEEE 1px, transparent 1px), linear-gradient(to bottom, #EEEEEE 1px, transparent 1px)"
   }
 }
-
 class Tree extends Component {
   static propTypes = {
     dialogues: PropTypes.arrayOf(PropTypes.object),
@@ -93,55 +89,49 @@ class Tree extends Component {
       actor: 0
     })
   }
-  handleChoicePositionUpdate = (event, data, index) => {
-    this.props.updateChoice({
-      index,
-      dialogue: { pos: [data.lastX, data.lastY] }
-    })
-  }
 
-  isNegative = n => {
-    return ((n = +n) || 1 / n) < 0
-  }
+  // POSSIBLE ZOOMING
+  // isNegative = n => {
+  //   return ((n = +n) || 1 / n) < 0
+  // }
 
-  handleZoom = e => {
-    if (!e.shiftKey) {
-      return
-    }
-    e.preventDefault()
-    const direction =
-      this.isNegative(e.deltaX) && this.isNegative(e.deltaY) ? "down" : "up"
-    if (direction === "up") {
-      this.setState({ scale: this.state.scale + zoomStep })
-    } else {
-      this.setState({ scale: this.state.scale - zoomStep })
-    }
-    if (this.state.scale < 0.3) {
-      this.setState({ scale: 0.3 })
-    }
-  }
+  // handleZoom = e => {
+  //   if (!e.shiftKey) {
+  //     return
+  //   }
+  //   e.preventDefault()
+  //   const direction =
+  //     this.isNegative(e.deltaX) && this.isNegative(e.deltaY) ? "down" : "up"
+  //   if (direction === "up") {
+  //     this.setState({ scale: this.state.scale + zoomStep })
+  //   } else {
+  //     this.setState({ scale: this.state.scale - zoomStep })
+  //   }
+  //   if (this.state.scale < 0.3) {
+  //     this.setState({ scale: 0.3 })
+  //   }
+  // }
 
   render() {
-    const { meta } = this.props
+    const { meta, dialogues, choices } = this.props
     const { scale } = this.state
     const hideEditor = {
       transform: meta.editorHidden ? "translateX(28vw)" : "translateX(0)"
     }
     return (
-      <Paper style={styles.container}>
-        <div
+      <div style={styles.dragGrid}>
+        {/* <div
           style={{
             transform: `scale(${scale})`,
             transition: "transform 0ms linear"
           }}
           id="zoomGrid"
           onWheel={this.handleZoom}
-        >
-          <div id="dragGrid" style={styles.dragGrid}>
-            <DialogueList {...this.props} gridSize={gridSize} />
-            <ChoiceList {...this.props} gridSize={gridSize} />
-          </div>
-        </div>
+        > */}
+        <DialogueList {...this.props} gridSize={gridSize} />
+        <ChoiceList {...this.props} gridSize={gridSize} />
+        <LinkList dialogues={dialogues} choices={choices} />
+        {/* </div> */}
         <div style={{ ...styles.buttonContainer, ...hideEditor }}>
           <FloatingActionButton
             mini={true}
@@ -159,7 +149,7 @@ class Tree extends Component {
             <FontIcon className="material-icons md-48">chat</FontIcon>
           </FloatingActionButton>
         </div>
-      </Paper>
+      </div>
     )
   }
 }

@@ -33,7 +33,7 @@ export default function DialogueList({
     return (
       <Draggable
         key={i}
-        defaultPosition={{
+        position={{
           x: Math.round(d.pos[0] / gridSize) * gridSize,
           y: Math.round(d.pos[1] / gridSize) * gridSize
         }}
@@ -46,7 +46,7 @@ export default function DialogueList({
         }}
         onStop={(e, d) => handleDialoguePositionUpdate(e, d, i)}
       >
-        <div style={styles.dragContainer}>
+        <div id={`dialogues[${i}]`} style={styles.dragContainer}>
           <Dialogue
             index={i}
             title={d.title}

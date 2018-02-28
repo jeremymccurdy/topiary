@@ -2,7 +2,6 @@ import React from "react"
 import Draggable from "react-draggable"
 import PropTypes from "prop-types"
 import Choice from "./Choice"
-import Link from "./Link"
 
 const styles = {
   dragContainer: {
@@ -29,7 +28,7 @@ export default function ChoiceList({
     return (
       <Draggable
         key={i}
-        defaultPosition={{
+        position={{
           x: Math.round(c.pos[0] / gridSize) * gridSize,
           y: Math.round(c.pos[1] / gridSize) * gridSize
         }}
@@ -41,14 +40,15 @@ export default function ChoiceList({
           // handleDialogueSelect(i)
         }}
       >
-        <div style={styles.dragContainer}>
-          <Choice
-            index={i}
-            tags={c.tags}
-            body={c.body}
-            deleteChoice={deleteChoice}
-          />
-          {c.next.map(n => <Link key={n} from={c.pos} to={eval(n).pos} />)}
+        <div>
+          <div id={`choices[${i}]`} style={styles.dragContainer}>
+            <Choice
+              index={i}
+              tags={c.tags}
+              body={c.body}
+              deleteChoice={deleteChoice}
+            />
+          </div>
         </div>
       </Draggable>
     )

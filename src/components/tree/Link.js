@@ -1,29 +1,26 @@
 import React from "react"
 import PropTypes from "prop-types"
 
-const styles = {
-  link: {
-    position: "absolute",
-    margin: 0,
-    padding: 0,
-    transition: `all 0ms`
-  }
-}
-
 export default function Link({ from, to }) {
-  const w = Math.abs(from[0] - to[0]) || 1
-  const h = Math.abs(from[1] - to[1])
+  const posA = {
+    x: from[0] + 4,
+    y: from[1] + 15
+  }
+  const posB = {
+    x: to[0] - 10,
+    y: to[1] + 10
+  }
+  // const lStr = `M${posA.x} ${posA.y} L ${posB.x} ${posB.y}`
+  const dStr = `M${posA.x} ${posA.y} C ${posA.x - 80} ${posA.y}, ${posB.x -
+    80} ${posB.y}, ${posB.x} ${posB.y}`
   return (
-    <svg
-      className={"link-test"}
-      width={w}
-      height={h}
-      style={styles.link}
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <title id="corner">corner</title>
-      <path d={`M0 0, L ${w} ${h}`} stroke="black" fill="black" />
-    </svg>
+    <path
+      d={dStr}
+      markerEnd="url(#arrowhead)"
+      stroke="black"
+      strokeWidth="2px"
+      fill="none"
+    />
   )
 }
 
