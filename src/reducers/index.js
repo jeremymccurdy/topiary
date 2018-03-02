@@ -1,6 +1,6 @@
 import { combineReducers } from "redux"
 
-import currentDialogue from "./currentDialogue"
+import currentEdit from "./currentEdit"
 import actors from "./actors"
 import dialogues from "./dialogues"
 import choices from "./choices"
@@ -9,7 +9,7 @@ import colors from "./colors"
 import meta from "./meta"
 
 export default combineReducers({
-  currentDialogue,
+  currentEdit,
   dialogues,
   choices,
   actors,

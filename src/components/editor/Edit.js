@@ -3,7 +3,7 @@ import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import { SelectField, TextField, MenuItem, Chip } from "material-ui"
 
-import { updateDialogue } from "../../actions"
+import { updateNode } from "../../actions"
 
 const styles = {
   textStyle: {
@@ -27,35 +27,31 @@ const styles = {
 class EditTab extends Component {
   static propTypes = {
     actors: PropTypes.arrayOf(PropTypes.object),
-    dialogues: PropTypes.arrayOf(PropTypes.object),
-    currentDialogue: PropTypes.number,
-    updateDialogue: PropTypes.func.isRequired
+    dialogues: PropTypes.objectOf(PropTypes.object),
+    choices: PropTypes.objectOf(PropTypes.object),
+    currentEdit: PropTypes.object,
+    updateNode: PropTypes.func.isRequired
   }
 
   static defaultProps = {
     actors: [],
     dialogues: [],
-    currentDialogue: 0
+    currentEdit: {}
   }
 
   state = {
     tagsField: ""
   }
 
-  handleTitleUpdate = event => {
-    this.props.updateDialogue({
-      index: this.props.currentDialogue,
-      dialogue: { title: event.target.value }
-    })
-  }
   handleTagsUpdate = event => {
     this.setState({ tagsField: this.state.tagsField + event.key })
-    const { dialogues, currentDialogue, updateDialogue } = this.props
-    const { tags } = dialogues[currentDialogue]
+    const { currentEdit, updateNode } = this.props
+    const { tags } = this.props[currentEdit.t][currentEdit.id]
     if (event.key === "Enter") {
-      updateDialogue({
-        index: currentDialogue,
-        dialogue: {
+      updateNode({
+        id: currentEdit.id,
+        t: currentEdit.t,
+        payload: {
           tags: tags ? [...tags, event.target.value] : [event.target.value]
         }
       })
@@ -64,46 +60,46 @@ class EditTab extends Component {
   }
 
   handleDeleteTag = index => {
-    const { dialogues, currentDialogue, updateDialogue } = this.props
-    const { tags } = dialogues[currentDialogue]
-    updateDialogue({
-      index: currentDialogue,
-      dialogue: {
+    const { currentEdit, updateNode } = this.props
+    const { tags } = this.props[currentEdit.t][currentEdit.id]
+    updateNode({
+      id: currentEdit.id,
+      t: currentEdit.t,
+      payload: {
         tags: tags.filter((tag, i) => i !== index)
       }
     })
   }
 
   handleActorUpdate = (event, index) => {
-    this.props.updateDialogue({
-      index: this.props.currentDialogue,
-      dialogue: { actor: index }
+    const { updateNode, currentEdit } = this.props
+    updateNode({
+      id: currentEdit.id,
+      t: currentEdit.it,
+      payload: { actor: index }
     })
   }
 
-  handleConditionsUpdate = event => {
-    this.props.updateDialogue({
-      index: this.props.currentDialogue,
-      dialogue: { conditions: event.target.value }
-    })
-  }
-
-  handleBodyUpdate = event => {
-    this.props.updateDialogue({
-      index: this.props.currentDialogue,
-      dialogue: { body: event.target.value }
+  handleTextUpdate = (event, name) => {
+    const { updateNode, currentEdit } = this.props
+    updateNode({
+      id: currentEdit.id,
+      t: currentEdit.t,
+      payload: { [name]: event.target.value }
     })
   }
 
   render() {
-    const { actors, dialogues, currentDialogue } = this.props
+    const { actors, currentEdit } = this.props
+    const type = currentEdit.t
+    const node = this.props[currentEdit.t][currentEdit.id]
     const menuItems = actors.map((actor, i) => (
       <MenuItem key={actor.name + i} value={i} primaryText={actor.name} />
     ))
 
     const chipTags =
-      dialogues[currentDialogue] &&
-      dialogues[currentDialogue].tags.map((tag, i) => (
+      node &&
+      node.tags.map((tag, i) => (
         <Chip
           key={tag}
           style={styles.tagChip}
@@ -113,28 +109,31 @@ class EditTab extends Component {
           {tag}
         </Chip>
       ))
-
     return (
       <div style={styles.tabContent}>
-        <TextField
-          name="title"
-          fullWidth
-          textareaStyle={styles.textStyle}
-          floatingLabelFixed
-          floatingLabelText={<span>Title</span>}
-          value={dialogues[currentDialogue] && dialogues[currentDialogue].title}
-          onChange={e => this.handleTitleUpdate(e)}
-        />
-        <SelectField
-          name="actor"
-          fullWidth
-          floatingLabelFixed
-          floatingLabelText={<span>Actor</span>}
-          value={dialogues[currentDialogue] && dialogues[currentDialogue].actor}
-          onChange={this.handleActorUpdate}
-        >
-          {menuItems}
-        </SelectField>
+        {type === "dialogues" && (
+          <TextField
+            name="title"
+            fullWidth
+            textareaStyle={styles.textStyle}
+            floatingLabelFixed
+            floatingLabelText={<span>Title</span>}
+            value={node && node.title}
+            onChange={e => this.handleTextUpdate(e, "title")}
+          />
+        )}
+        {type === "dialogues" && (
+          <SelectField
+            name="actor"
+            fullWidth
+            floatingLabelFixed
+            floatingLabelText={<span>Actor</span>}
+            value={node && node.actor}
+            onChange={this.handleActorUpdate}
+          >
+            {menuItems}
+          </SelectField>
+        )}
         <TextField
           name="tags"
           fullWidth
@@ -145,17 +144,17 @@ class EditTab extends Component {
           onKeyPress={this.handleTagsUpdate}
         />
         <div style={styles.tagsWrapper}>{chipTags}</div>
-        <TextField
-          name="conditions"
-          fullWidth
-          textareaStyle={styles.textStyle}
-          floatingLabelFixed
-          floatingLabelText={<span>Conditions</span>}
-          value={
-            dialogues[currentDialogue] && dialogues[currentDialogue].conditions
-          }
-          onKeyPress={e => this.handleConditionsUpdate(e)}
-        />
+        {type === "dialogues" && (
+          <TextField
+            name="conditions"
+            fullWidth
+            textareaStyle={styles.textStyle}
+            floatingLabelFixed
+            floatingLabelText={<span>Conditions</span>}
+            value={node && node.conditions}
+            onChange={e => this.handleTextUpdate(e, "conditions")}
+          />
+        )}
         <TextField
           name="body"
           multiLine
@@ -163,8 +162,8 @@ class EditTab extends Component {
           textareaStyle={styles.textStyle}
           floatingLabelFixed
           floatingLabelText={<span>Body</span>}
-          value={dialogues[currentDialogue] && dialogues[currentDialogue].body}
-          onChange={e => this.handleBodyUpdate(e)}
+          value={node && node.body}
+          onChange={e => this.handleTextUpdate(e, "body")}
         />
       </div>
     )
@@ -175,8 +174,9 @@ const mapStateToProps = state => {
   return {
     actors: state.actors,
     dialogues: state.dialogues,
-    currentDialogue: state.currentDialogue
+    choices: state.choices,
+    currentEdit: state.currentEdit
   }
 }
 
-export default connect(mapStateToProps, { updateDialogue })(EditTab)
+export default connect(mapStateToProps, { updateNode })(EditTab)

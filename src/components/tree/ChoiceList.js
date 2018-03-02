@@ -13,41 +13,36 @@ const styles = {
 export default function ChoiceList({
   choices,
   gridSize,
-  currentSelection,
-  deleteChoice,
-  updateChoice,
+  currentEdit,
+  updateNode,
   dialogues
 }) {
-  function handleChoicePositionUpdate(event, data, index) {
-    updateChoice({
-      index,
-      choice: { pos: [data.lastX, data.lastY] }
+  function handleChoicePositionUpdate(event, data, id) {
+    updateNode({
+      id,
+      t: "choices",
+      payload: { pos: [data.lastX, data.lastY] }
     })
   }
-  return choices.map((c, i) => {
+  return Object.keys(choices).map(c => {
     return (
       <Draggable
-        key={i}
+        key={c}
         position={{
-          x: Math.round(c.pos[0] / gridSize) * gridSize,
-          y: Math.round(c.pos[1] / gridSize) * gridSize
+          x: Math.round(choices[c].pos[0] / gridSize) * gridSize,
+          y: Math.round(choices[c].pos[1] / gridSize) * gridSize
         }}
         handle=".draggable"
         grid={[gridSize, gridSize]}
-        onStop={(e, d) => handleChoicePositionUpdate(e, d, i)}
+        onStop={(e, d) => handleChoicePositionUpdate(e, d, c)}
         onMouseDown={e => {
           e.stopPropagation()
-          // handleDialogueSelect(i)
+          currentEdit({ t: "choices", id: c })
         }}
       >
         <div>
-          <div id={`choices[${i}]`} style={styles.dragContainer}>
-            <Choice
-              index={i}
-              tags={c.tags}
-              body={c.body}
-              deleteChoice={deleteChoice}
-            />
+          <div style={styles.dragContainer}>
+            <Choice id={c} tags={choices[c].tags} body={choices[c].body} />
           </div>
         </div>
       </Draggable>
@@ -56,9 +51,10 @@ export default function ChoiceList({
 }
 
 ChoiceList.propTypes = {
-  choices: PropTypes.array,
-  dialogues: PropTypes.array,
+  choices: PropTypes.object,
+  dialogues: PropTypes.object,
   gridSize: PropTypes.number,
   actors: PropTypes.array,
-  deleteChoice: PropTypes.func
+  currentEdit: PropTypes.func,
+  updateNode: PropTypes.func
 }

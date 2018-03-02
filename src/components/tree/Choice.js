@@ -10,6 +10,7 @@ import {
   Chip
 } from "material-ui"
 import Corner from "./Corner"
+import tree from "../../lib/tree"
 
 const styles = {
   container: {
@@ -63,8 +64,7 @@ class Dialogue extends Component {
   static propTypes = {
     tags: PropTypes.arrayOf(PropTypes.string),
     body: PropTypes.string,
-    index: PropTypes.number.isRequired,
-    deleteChoice: PropTypes.func.isRequired
+    id: PropTypes.string.isRequired
   }
 
   static defaultProps = {
@@ -85,7 +85,7 @@ class Dialogue extends Component {
   }
 
   render() {
-    const { index, tags, body, deleteChoice } = this.props
+    const { id, tags, body } = this.props
     const chipTags = tags.map(tag => (
       <Chip key={tag} style={styles.tagChip} labelStyle={styles.tag}>
         {tag}
@@ -120,7 +120,7 @@ class Dialogue extends Component {
             <IconButton
               style={styles.button}
               iconStyle={styles.icon}
-              onClick={() => deleteChoice(index)}
+              onClick={() => tree.deleteNode({ t: "choices", id })}
             >
               <FontIcon className="material-icons">delete</FontIcon>
             </IconButton>

@@ -14,47 +14,48 @@ export default function DialogueList({
   dialogues,
   gridSize,
   actors,
-  deleteDialogue,
-  currentDialogue,
-  updateDialogue
+  deleteNode,
+  currentEdit,
+  updateNode
 }) {
-  function handleDialoguePositionUpdate(event, data, index) {
-    updateDialogue({
-      index,
-      dialogue: { pos: [data.lastX, data.lastY] }
+  function handleDialoguePositionUpdate(event, data, id) {
+    updateNode({
+      id,
+      t: "dialogues",
+      payload: { pos: [data.lastX, data.lastY] }
     })
   }
 
-  function handleDialogueSelect(index) {
-    currentDialogue(index)
-  }
-
-  return dialogues.map((d, i) => {
+  return Object.keys(dialogues).map(d => {
     return (
       <Draggable
-        key={i}
+        id={d}
+        key={d}
         position={{
-          x: Math.round(d.pos[0] / gridSize) * gridSize,
-          y: Math.round(d.pos[1] / gridSize) * gridSize
+          x: Math.round(dialogues[d].pos[0] / gridSize) * gridSize,
+          y: Math.round(dialogues[d].pos[1] / gridSize) * gridSize
         }}
         handle=".draggable"
         grid={[gridSize, gridSize]}
         onMouseDown={e => {
           e.preventDefault()
           e.stopPropagation()
-          handleDialogueSelect(i)
+          currentEdit({ t: "dialogues", id: d })
         }}
-        onStop={(e, d) => handleDialoguePositionUpdate(e, d, i)}
+        onStop={(e, data) => handleDialoguePositionUpdate(e, data, d)}
       >
-        <div id={`dialogues[${i}]`} style={styles.dragContainer}>
+        <div style={styles.dragContainer}>
           <Dialogue
-            index={i}
-            title={d.title}
-            tags={d.tags}
-            body={d.body}
-            actor={actors[d.actor] && actors[d.actor].name}
-            color={actors[d.actor] && actors[d.actor].color}
-            deleteDialogue={deleteDialogue}
+            id={d}
+            title={dialogues[d].title}
+            tags={dialogues[d].tags}
+            body={dialogues[d].body}
+            actor={
+              actors[dialogues[d].actor] && actors[dialogues[d].actor].name
+            }
+            color={
+              actors[dialogues[d].actor] && actors[dialogues[d].actor].color
+            }
           />
         </div>
       </Draggable>
@@ -63,7 +64,7 @@ export default function DialogueList({
 }
 
 DialogueList.propTypes = {
-  dialogues: PropTypes.array,
+  dialogues: PropTypes.object,
   gridSize: PropTypes.number,
   actors: PropTypes.array,
   deleteDialogue: PropTypes.func

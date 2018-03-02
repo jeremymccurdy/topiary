@@ -3,18 +3,16 @@ import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import { FontIcon, FloatingActionButton } from "material-ui"
 import {
-  newDialogue,
-  updateDialogue,
-  deleteDialogue,
-  newChoice,
-  updateChoice,
-  deleteChoice,
-  currentDialogue,
+  newNode,
+  updateNode,
+  deleteNode,
+  currentEdit,
   toggleEditor
 } from "../actions"
 import DialogueList from "./tree/DialogueList"
 import ChoiceList from "./tree/ChoiceList"
 import LinkList from "./tree/LinkList"
+import rnd from "../lib/rnd"
 
 const boundary = 5000
 const zoomStep = 0.03
@@ -54,15 +52,12 @@ const styles = {
 }
 class Tree extends Component {
   static propTypes = {
-    dialogues: PropTypes.arrayOf(PropTypes.object),
-    choices: PropTypes.arrayOf(PropTypes.object),
-    newDialogue: PropTypes.func.isRequired,
-    updateDialogue: PropTypes.func.isRequired,
-    deleteDialogue: PropTypes.func.isRequired,
-    newChoice: PropTypes.func.isRequired,
-    updateChoice: PropTypes.func.isRequired,
-    deleteChoice: PropTypes.func.isRequired,
-    currentDialogue: PropTypes.func.isRequired,
+    dialogues: PropTypes.objectOf(PropTypes.object),
+    choices: PropTypes.objectOf(PropTypes.object),
+    newNode: PropTypes.func.isRequired,
+    updateNode: PropTypes.func.isRequired,
+    deleteNode: PropTypes.func.isRequired,
+    currentEdit: PropTypes.func.isRequired,
     toggleEditor: PropTypes.func.isRequired,
     actors: PropTypes.arrayOf(PropTypes.object),
     meta: PropTypes.shape({
@@ -70,7 +65,8 @@ class Tree extends Component {
     })
   }
   static defaultProps = {
-    dialogues: []
+    dialogues: {},
+    choices: {}
   }
 
   state = {
@@ -78,16 +74,45 @@ class Tree extends Component {
   }
 
   handleNewDialogue = () => {
-    this.props.newDialogue({
-      title: "New",
-      tags: [],
-      body: "new dialogue",
-      pos: [
-        window.pageXOffset + window.innerWidth / 2 - 100,
-        window.pageYOffset + window.innerHeight / 2 - 50
-      ],
-      actor: 0
+    const { newNode, currentEdit } = this.props
+    const newId = rnd()
+    newNode({
+      id: newId,
+      t: "dialogues",
+      payload: {
+        title: "New",
+        tags: [],
+        body: "new dialogue",
+        pos: [
+          window.pageXOffset + window.innerWidth / 2 - 100,
+          window.pageYOffset + window.innerHeight / 2 - 50
+        ],
+        prev: [],
+        next: [],
+        actor: 0
+      }
     })
+    currentEdit({ id: newId, t: "dialogues" })
+  }
+
+  handleNewChoice = () => {
+    const { newNode, currentEdit } = this.props
+    const newId = rnd()
+    newNode({
+      id: newId,
+      t: "choices",
+      payload: {
+        tags: [],
+        body: "new choice",
+        pos: [
+          window.pageXOffset + window.innerWidth / 2 - 100,
+          window.pageYOffset + window.innerHeight / 2 - 50
+        ],
+        prev: [],
+        next: []
+      }
+    })
+    currentEdit({ id: newId, t: "choices" })
   }
 
   // POSSIBLE ZOOMING
@@ -164,12 +189,9 @@ const mapStateToProps = state => {
 }
 
 export default connect(mapStateToProps, {
-  newDialogue,
-  updateDialogue,
-  deleteDialogue,
-  newChoice,
-  updateChoice,
-  deleteChoice,
-  currentDialogue,
+  newNode,
+  updateNode,
+  deleteNode,
+  currentEdit,
   toggleEditor
 })(Tree)

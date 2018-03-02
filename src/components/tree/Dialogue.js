@@ -10,6 +10,7 @@ import {
   Chip
 } from "material-ui"
 import Corner from "./Corner"
+import tree from "../../lib/tree"
 
 const styles = {
   container: {
@@ -72,9 +73,8 @@ class Dialogue extends Component {
     tags: PropTypes.arrayOf(PropTypes.string),
     body: PropTypes.string,
     color: PropTypes.string,
-    index: PropTypes.number.isRequired,
-    actor: PropTypes.string,
-    deleteDialogue: PropTypes.func.isRequired
+    id: PropTypes.string.isRequired,
+    actor: PropTypes.string
   }
   static defaultProps = {
     title: "",
@@ -92,20 +92,16 @@ class Dialogue extends Component {
     this.setState({ expanded })
   }
 
+  handleCollapse = node => {
+    console.log(node)
+  }
+
   adjustWidth = (event, data) => {
     this.setState({ widthAdjustment: data.x })
   }
 
   render() {
-    const {
-      index,
-      title,
-      tags,
-      body,
-      deleteDialogue,
-      color,
-      actor
-    } = this.props
+    const { id, title, tags, body, color, actor } = this.props
     const chipTags = tags.map(tag => (
       <Chip key={tag} style={styles.tagChip} labelStyle={styles.tag}>
         {tag}
@@ -140,7 +136,7 @@ class Dialogue extends Component {
             <IconButton
               style={styles.button}
               iconStyle={styles.icon}
-              onClick={() => deleteDialogue(index)}
+              onClick={() => tree.deleteNode({ t: "dialogues", id })}
             >
               <FontIcon className="material-icons">delete</FontIcon>
             </IconButton>
@@ -148,7 +144,11 @@ class Dialogue extends Component {
           <IconButton style={styles.button} iconStyle={styles.icon}>
             <FontIcon className="material-icons">linear_scale</FontIcon>
           </IconButton>
-          <IconButton style={styles.button} iconStyle={styles.icon}>
+          <IconButton
+            style={styles.button}
+            iconStyle={styles.icon}
+            onClick={() => this.handleCollapse(this)}
+          >
             <FontIcon className="material-icons">layers</FontIcon>
           </IconButton>
         </CardActions>

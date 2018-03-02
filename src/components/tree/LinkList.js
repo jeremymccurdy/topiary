@@ -9,20 +9,30 @@ const styles = {
   }
 }
 
-export default function LinkList({ dialogues, choices }) {
+export default function LinkList(props) {
   const links = []
-  choices.forEach(c => {
-    if (c.next) {
-      c.next.map(n =>
-        links.push(<Link key={n} from={c.pos} to={eval(n).pos} />)
-      )
+  Object.values(props.choices).forEach(c => {
+    if (c.next && c.pos) {
+      c.next.forEach(n => {
+        const type = props[n.t]
+        if (type) {
+          links.push(
+            <Link key={n.id + "link"} from={c.pos} to={type[n.id].pos} />
+          )
+        }
+      })
     }
   })
-  dialogues.forEach(d => {
-    if (d.next) {
-      d.next.map(n =>
-        links.push(<Link key={n} from={d.pos} to={eval(n).pos} />)
-      )
+  Object.values(props.dialogues).forEach(d => {
+    if (d.next && d.pos) {
+      d.next.forEach(n => {
+        const type = props[n.t]
+        if (type[n.id]) {
+          links.push(
+            <Link key={n.id + "link"} from={d.pos} to={type[n.id].pos} />
+          )
+        }
+      })
     }
   })
   return (
@@ -51,11 +61,11 @@ export default function LinkList({ dialogues, choices }) {
 }
 
 LinkList.propTypes = {
-  dialogues: PropTypes.array,
-  choices: PropTypes.array
+  dialogues: PropTypes.object,
+  choices: PropTypes.object
 }
 
 LinkList.defaultProps = {
-  dialogues: [],
-  choices: []
+  dialogues: {},
+  choices: {}
 }

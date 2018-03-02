@@ -10,7 +10,6 @@ export default function Link({ from, to }) {
     x: to[0] - 10,
     y: to[1] + 10
   }
-  // const lStr = `M${posA.x} ${posA.y} L ${posB.x} ${posB.y}`
   const dStr = `M${posA.x} ${posA.y} C ${posA.x - 80} ${posA.y}, ${posB.x -
     80} ${posB.y}, ${posB.x} ${posB.y}`
   return (

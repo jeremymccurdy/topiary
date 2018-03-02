@@ -1,15 +1,25 @@
-const dialogues = (state = [], action) => {
+const dialogues = (state = {}, action) => {
   switch (action.type) {
     case "NEW_DIALOGUE":
-      return [...state, action.payload]
+      return {
+        ...state,
+        [action.id]: action.payload
+      }
     case "UPDATE_DIALOGUE":
-      return Object.assign([...state], {
-        [action.index]: Object.assign({}, state[action.index], {
-          ...action.dialogue
-        })
-      })
+      return {
+        ...state,
+        [action.id]: {
+          ...state[action.id],
+          ...action.payload
+        }
+      }
     case "DELETE_DIALOGUE":
-      return state.filter((actor, i) => i !== action.index)
+      return Object.keys(state).reduce((acc, key) => {
+        if (key !== action.id) {
+          return { ...acc, [key]: state[key] }
+        }
+        return acc
+      }, {})
     default:
       return state
   }
