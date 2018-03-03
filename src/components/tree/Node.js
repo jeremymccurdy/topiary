@@ -77,7 +77,7 @@ class Node extends Component {
     actor: PropTypes.string,
     dialogues: PropTypes.object,
     choices: PropTypes.object,
-    currentEdit: PropTypes.object,
+    currentNode: PropTypes.object,
     pos: PropTypes.array,
     bounds: PropTypes.array,
     next: PropTypes.array,
@@ -88,7 +88,8 @@ class Node extends Component {
     tags: [],
     actor: "",
     color: "FFFFFF",
-    body: ""
+    body: "",
+    currentNode: {}
   }
   state = {
     expanded: true,
@@ -127,6 +128,13 @@ class Node extends Component {
     this.setState({ widthAdjustment: 0 })
   }
 
+  currentNodeColor = () => {
+    const { id, currentNode } = this.props
+    return currentNode.id === id
+      ? `linear-gradient(0deg, #43a047 10%, #FFFFFF 10%)`
+      : "#FFFFFF"
+  }
+
   render() {
     const { id, t, title, tags, body, color, actor, bounds, next } = this.props
     const { widthAdjustment } = this.state
@@ -135,7 +143,6 @@ class Node extends Component {
         {tag}
       </Chip>
     ))
-
     return (
       <Card
         initiallyExpanded
@@ -155,11 +162,16 @@ class Node extends Component {
           textStyle={styles.title}
           className={"draggable"}
         />
-        <CardText style={styles.body}>
+        <CardText style={styles.body} expandable>
           {tags && <div style={styles.tagWrapper}>{chipTags}</div>}
           {body}
         </CardText>
-        <CardActions style={styles.footer}>
+        <CardActions
+          style={{
+            ...styles.footer,
+            background: this.currentNodeColor()
+          }}
+        >
           {this.state.expanded && (
             <IconButton
               style={styles.button}
@@ -201,7 +213,8 @@ class Node extends Component {
 const mapStateToProps = state => {
   return {
     choices: state.choices,
-    dialogues: state.dialogues
+    dialogues: state.dialogues,
+    currentNode: state.currentNode
   }
 }
 

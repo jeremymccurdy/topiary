@@ -44,9 +44,7 @@ const styles = {
     position: "relative",
     backgroundColor: "white",
     display: "block",
-    backgroundSize: `${gridSize}px ${gridSize}px`,
-    backgroundImage:
-      "linear-gradient(to right, #EEEEEE 1px, transparent 1px), linear-gradient(to bottom, #EEEEEE 1px, transparent 1px)"
+    backgroundSize: `${gridSize}px ${gridSize}px`
   }
 }
 
@@ -76,11 +74,25 @@ class Tree extends Component {
 
   handleNewNode = t => {
     const { newNode, selectNode } = this.props
+    const { scale } = this.state
     const newId = rnd()
     const diffs =
       t === "dialogues"
         ? { actor: 0, body: "new dialogue" }
         : { body: "new choice" }
+    const newPos = [
+      Math.round(
+        (window.pageXOffset + window.innerWidth / 2 - 100) / gridSize
+      ) *
+        gridSize *
+        scale,
+      Math.round(
+        (window.pageYOffset + window.innerHeight / 2 - 50) / gridSize
+      ) *
+        gridSize *
+        scale
+    ]
+    console.log(newPos)
     newNode({
       id: newId,
       t,
@@ -89,10 +101,7 @@ class Tree extends Component {
         t,
         title: "untitled",
         tags: [],
-        pos: [
-          window.pageXOffset + window.innerWidth / 2 - 100,
-          window.pageYOffset + window.innerHeight / 2 - 50
-        ],
+        pos: newPos,
         bounds: [210],
         prev: [],
         next: [],
@@ -152,12 +161,14 @@ class Tree extends Component {
             style={{
               ...styles.dragGrid,
               width: boundary.width,
-              height: boundary.height
+              height: boundary.height,
+              backgroundImage: `linear-gradient(to right, #EEEEEE ${1 /
+                scale}px, transparent ${1 /
+                scale}px), linear-gradient(to bottom, #EEEEEE ${1 /
+                scale}px, transparent ${1 / scale}px)`
             }}
           >
-            {/* <DialogueList {...this.props} gridSize={gridSize} />
-            <ChoiceList {...this.props} gridSize={gridSize} /> */}
-            <NodeList {...this.props} gridSize={gridSize} />
+            <NodeList {...this.props} {...this.state} gridSize={gridSize} />
             <ArrowList dialogues={dialogues} choices={choices} />
           </div>
         </div>

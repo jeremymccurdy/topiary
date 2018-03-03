@@ -19,12 +19,8 @@ function determineEdge(start, end) {
 }
 
 export default function Arrow({ from, to, fromId, toId }) {
-  const fromBounds = document
-    .getElementById(fromId)
-    .firstChild.getBoundingClientRect()
-  const toBounds = document
-    .getElementById(toId)
-    .firstChild.getBoundingClientRect()
+  const fromBounds = document.getElementById(fromId).getBoundingClientRect()
+  const toBounds = document.getElementById(toId).getBoundingClientRect()
   const start = {
     x: from[0] + fromBounds.width / 2,
     y: from[1] + fromBounds.height / 2

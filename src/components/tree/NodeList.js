@@ -19,7 +19,22 @@ export default class NodeList extends Component {
     actors: PropTypes.array,
     selectNode: PropTypes.func,
     updateNode: PropTypes.func,
-    meta: PropTypes.object
+    currentNode: PropTypes.object,
+    meta: PropTypes.object,
+    scale: PropTypes.number
+  }
+
+  state = {
+    xAdjust: 0,
+    yAdjust: 0
+  }
+
+  handleNodePositionAdjust(event, data) {
+    const { scale } = this.props
+    this.setState({
+      xAdjust: data.deltaX / scale,
+      yAdjust: data.deltaY / scale
+    })
   }
 
   handleNodePositionUpdate(event, data, id, t) {
@@ -28,6 +43,7 @@ export default class NodeList extends Component {
       t,
       payload: { pos: [data.lastX, data.lastY] }
     })
+    this.setState({ xAdjust: 0, yAdjust: 0 })
   }
   render() {
     const {
@@ -37,6 +53,7 @@ export default class NodeList extends Component {
       actors,
       selectNode,
       updateNode,
+      currentNode,
       meta
     } = this.props
     const nodes = { ...dialogues, ...choices }
@@ -55,6 +72,7 @@ export default class NodeList extends Component {
               return tree.setLink({ linkTo: { t: n.t, id: n.id } })
             selectNode({ t: n.t, id: n.id })
           }}
+          onDrag={(e, data) => this.handleNodePositionAdjust(e, data)}
           onStop={(e, data) =>
             this.handleNodePositionUpdate(e, data, n.id, n.t)
           }
@@ -73,6 +91,7 @@ export default class NodeList extends Component {
               bounds={n.bounds}
               updateNode={updateNode}
               selectNode={selectNode}
+              currentNode={currentNode}
             />
           </div>
         </Draggable>
