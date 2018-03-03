@@ -5,6 +5,16 @@ const meta = (state = null, action) => {
         ...state,
         editorHidden: action.editorHidden
       }
+    case "LINK_STATUS":
+      return {
+        ...state,
+        ...action
+      }
+    case "WARNING_MESSAGE":
+      return {
+        ...state,
+        ...action
+      }
     default:
       return state
   }

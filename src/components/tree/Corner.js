@@ -13,9 +13,15 @@ const styles = {
   }
 }
 
-export default function Corner({ adjustWidth }) {
+export default function Corner({ adjustWidth, updateWidth }) {
   return (
-    <Draggable axis="x" grid={[30, 30]} onDrag={(e, d) => adjustWidth(e, d)}>
+    <Draggable
+      axis="x"
+      grid={[30, 30]}
+      onDrag={(e, d) => adjustWidth(e, d)}
+      onStop={updateWidth}
+      bounds={{ left: 0 }}
+    >
       <svg
         style={styles.corner}
         xmlns="http://www.w3.org/2000/svg"
@@ -37,5 +43,6 @@ export default function Corner({ adjustWidth }) {
 }
 
 Corner.propTypes = {
-  adjustWidth: PropTypes.func.isRequired
+  adjustWidth: PropTypes.func.isRequired,
+  updateWidth: PropTypes.func.isRequired
 }

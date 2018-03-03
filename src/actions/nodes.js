@@ -1,41 +1,53 @@
 export const updateNode = ({ id, payload, t }) => {
-  if (t === "dialogues") {
-    return {
-      type: "UPDATE_DIALOGUE",
-      id,
-      payload
-    }
-  }
-  return {
-    type: "UPDATE_CHOICE",
-    id,
-    payload
+  switch (t) {
+    case "dialogues":
+      return {
+        type: "UPDATE_DIALOGUE",
+        id,
+        payload
+      }
+    case "choices":
+      return {
+        type: "UPDATE_CHOICE",
+        id,
+        payload
+      }
+    default:
+      return
   }
 }
 
 export const newNode = ({ id, payload, t }) => {
-  if (t === "dialogues") {
-    return {
-      type: "NEW_DIALOGUE",
-      id,
-      payload
-    }
-  }
-  return {
-    type: "NEW_CHOICE",
-    id,
-    payload
+  switch (t) {
+    case "dialogues":
+      return {
+        type: "NEW_DIALOGUE",
+        id,
+        payload
+      }
+    case "choices":
+      return {
+        type: "NEW_CHOICE",
+        id,
+        payload
+      }
+    default:
+      return
   }
 }
-export const deleteNode = ({ id, payload, t }) => {
-  if (t === "dialogues") {
-    return {
-      type: "DELETE_DIALOGUE",
-      id
-    }
-  }
-  return {
-    type: "DELETE_CHOICE",
-    id
+export const deleteNode = ({ id, t }) => {
+  switch (t) {
+    case "dialogues":
+      return {
+        type: "DELETE_DIALOGUE",
+        id
+      }
+    case "choices":
+      return {
+        type: "DELETE_CHOICE",
+        id
+      }
+    default:
+      return
   }
 }

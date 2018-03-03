@@ -10,9 +10,12 @@ const initialState = {
       title: "Start",
       tags: ["Intro", "test"],
       body: "And so our adventure begins...",
-      pos: [2310, 90],
+      pos: [910, 90],
+      bounds: [210],
+      collapsed: false,
       actor: 0,
       conditions: "Game.Start == true",
+      prev: [],
       next: [
         {
           t: "choices",
@@ -32,7 +35,9 @@ const initialState = {
       title: "Home",
       tags: [],
       body: "You stay at home and do nothing.",
-      pos: [2000, 500],
+      pos: [600, 500],
+      bounds: [210],
+      collapsed: false,
       actor: 0,
       conditions: "",
       prev: [
@@ -47,7 +52,9 @@ const initialState = {
       title: "Venture",
       tags: [],
       body: "You go out and die from a squirrel bite.",
-      pos: [2310, 500],
+      pos: [910, 500],
+      bounds: [210],
+      collapsed: false,
       actor: 0,
       conditions: "",
       prev: [{ t: "choices", id: "3EcmQcOF" }],
@@ -57,7 +64,9 @@ const initialState = {
       title: "Cheat",
       tags: [],
       body: "You are a cheater! But well played.",
-      pos: [2610, 500],
+      pos: [1210, 500],
+      bounds: [210],
+      collapsed: false,
       actor: 0,
       conditions: "",
       prev: [{ t: "choices", id: "c2fPdCPh" }],
@@ -67,31 +76,39 @@ const initialState = {
   choices: {
     Ywdbg2Ox: {
       body: "I stay at home...",
-      tags: [],
+      tags: ["coward"],
       prev: [{ t: "dialogues", id: "ujGXGykg" }],
       next: [{ t: "dialogues", id: "pOm0BT2p" }],
-      pos: [2000, 360]
+      pos: [600, 360],
+      bounds: [210],
+      collapsed: false,
+      conditions: ""
     },
     "3EcmQcOF": {
       body: "I venture forth and begin my adventure!",
-      tags: [],
+      tags: ["brave"],
       prev: [{ t: "dialogues", id: "ujGXGykg" }],
       next: [{ t: "dialogues", id: "fOiYPfJo" }],
-      pos: [2310, 360]
+      pos: [910, 360],
+      bounds: [210],
+      collapsed: false,
+      conditions: ""
     },
     c2fPdCPh: {
       body: "I use cheat codes",
-      tags: [],
+      tags: ["cheat"],
       prev: [{ t: "dialogues", id: "ujGXGykg" }],
       next: [{ t: "dialogues", id: "lFqf3tkx" }],
-      pos: [2610, 360],
+      pos: [1210, 360],
+      bounds: [210],
+      collapsed: false,
       conditions: "cheater == true"
     }
   },
   actors: [{ name: "Narrator", playable: false, color: "FFFFFF" }],
   colors: ["FFFFFF", "94E495", "85B7A1", "486B8D", "554A6E", "501D47"],
   keys: [],
-  meta: { editorHidden: false }
+  meta: { editorHidden: false, warning: false, warningMessage: "" }
 }
 
 export default createStore(

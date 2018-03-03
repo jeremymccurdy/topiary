@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import {
   FontIcon,
@@ -9,6 +10,7 @@ import {
   CardText,
   Chip
 } from "material-ui"
+import { updateNode } from "../../actions"
 import Corner from "./Corner"
 import tree from "../../lib/tree"
 
@@ -74,7 +76,14 @@ class Dialogue extends Component {
     body: PropTypes.string,
     color: PropTypes.string,
     id: PropTypes.string.isRequired,
-    actor: PropTypes.string
+    actor: PropTypes.string,
+    dialogues: PropTypes.object,
+    choices: PropTypes.object,
+    currentEdit: PropTypes.object,
+    pos: PropTypes.array,
+    bounds: PropTypes.array,
+    next: PropTypes.array,
+    updateNode: PropTypes.func.isRequired
   }
   static defaultProps = {
     title: "",
@@ -85,6 +94,7 @@ class Dialogue extends Component {
   }
   state = {
     expanded: true,
+    collapsed: false,
     widthAdjustment: 0
   }
 
@@ -92,16 +102,35 @@ class Dialogue extends Component {
     this.setState({ expanded })
   }
 
-  handleCollapse = node => {
-    console.log(node)
+  handleCollapse = next => {
+    const { pos, updateNode } = this.props
+    if (next && this.state.collapsed) {
+      next.forEach(n => {
+        // updateNode({
+        //   id: n.id,
+        //   t: n.t,
+        //   payload: { pos: [pos[0] + 10, pos[1] + 10] }
+        // })
+      })
+    }
   }
 
   adjustWidth = (event, data) => {
     this.setState({ widthAdjustment: data.x })
   }
 
+  updateWidth = () => {
+    const { bounds, updateNode, id } = this.props
+    updateNode({
+      id,
+      t: "dialogues",
+      payload: { bounds: [bounds[0] + this.state.widthAdjustment] }
+    })
+  }
+
   render() {
-    const { id, title, tags, body, color, actor } = this.props
+    const { id, title, tags, body, color, actor, bounds, next } = this.props
+    const { widthAdjustment } = this.state
     const chipTags = tags.map(tag => (
       <Chip key={tag} style={styles.tagChip} labelStyle={styles.tag}>
         {tag}
@@ -113,7 +142,7 @@ class Dialogue extends Component {
         initiallyExpanded
         expanded={this.state.expanded}
         onExpandChange={this.handleExpandChange}
-        style={{ width: `calc(210px + ${this.state.widthAdjustment}px)` }}
+        style={{ width: `calc(210px + ${widthAdjustment}px)` }}
       >
         <CardHeader
           title={title}
@@ -127,7 +156,7 @@ class Dialogue extends Component {
           textStyle={styles.title}
           className={"draggable"}
         />
-        <CardText style={styles.body} expandable>
+        <CardText style={styles.body}>
           {tags && <div style={styles.tagWrapper}>{chipTags}</div>}
           {body}
         </CardText>
@@ -141,21 +170,40 @@ class Dialogue extends Component {
               <FontIcon className="material-icons">delete</FontIcon>
             </IconButton>
           )}
-          <IconButton style={styles.button} iconStyle={styles.icon}>
+          <IconButton
+            style={styles.button}
+            iconStyle={styles.icon}
+            onClick={() =>
+              tree.setLink({
+                linkStatus: true,
+                linkFrom: { t: "dialogues", id }
+              })
+            }
+          >
             <FontIcon className="material-icons">linear_scale</FontIcon>
           </IconButton>
           <IconButton
             style={styles.button}
             iconStyle={styles.icon}
-            onClick={() => this.handleCollapse(this)}
+            onClick={() => {
+              this.setState({ collapsed: !this.state.collapsed })
+              this.handleCollapse(next)
+            }}
           >
             <FontIcon className="material-icons">layers</FontIcon>
           </IconButton>
         </CardActions>
-        <Corner adjustWidth={this.adjustWidth} />
+        <Corner adjustWidth={this.adjustWidth} updateWidth={this.updateWidth} />
       </Card>
     )
   }
 }
 
-export default Dialogue
+const mapStateToProps = state => {
+  return {
+    choices: state.choices,
+    dialogues: state.dialogues
+  }
+}
+
+export default connect(mapStateToProps, { updateNode })(Dialogue)

@@ -29,7 +29,7 @@ class Nav extends Component {
     return (
       <Toolbar style={styles.container}>
         <ToolbarGroup>
-          <ToolbarTitle text="dTree" />
+          <ToolbarTitle text="topiary" />
           <TextField
             name="scene"
             fullWidth

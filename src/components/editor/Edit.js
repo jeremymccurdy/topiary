@@ -75,7 +75,7 @@ class EditTab extends Component {
     const { updateNode, currentEdit } = this.props
     updateNode({
       id: currentEdit.id,
-      t: currentEdit.it,
+      t: currentEdit.t,
       payload: { actor: index }
     })
   }
@@ -103,7 +103,6 @@ class EditTab extends Component {
         <Chip
           key={tag}
           style={styles.tagChip}
-          // labelStyle={styles.tag}
           onRequestDelete={() => this.handleDeleteTag(i)}
         >
           {tag}
@@ -144,17 +143,15 @@ class EditTab extends Component {
           onKeyPress={this.handleTagsUpdate}
         />
         <div style={styles.tagsWrapper}>{chipTags}</div>
-        {type === "dialogues" && (
-          <TextField
-            name="conditions"
-            fullWidth
-            textareaStyle={styles.textStyle}
-            floatingLabelFixed
-            floatingLabelText={<span>Conditions</span>}
-            value={node && node.conditions}
-            onChange={e => this.handleTextUpdate(e, "conditions")}
-          />
-        )}
+        <TextField
+          name="conditions"
+          fullWidth
+          textareaStyle={styles.textStyle}
+          floatingLabelFixed
+          floatingLabelText={<span>Conditions</span>}
+          value={(node && node.conditions) || ""}
+          onChange={e => this.handleTextUpdate(e, "conditions")}
+        />
         <TextField
           name="body"
           multiLine

@@ -24,5 +24,59 @@ export default {
       )
     })
     store.dispatch(actions.deleteNode({ id, t }))
+  },
+  setLink: ({ linkStatus, linkTo, linkFrom }) => {
+    if (linkStatus) {
+      return store.dispatch(actions.setLinkStatus({ linkStatus, linkFrom }))
+    }
+    const from = store.getState().meta.linkFrom
+    const currentFrom = store.getState()[from.t][from.id]
+    const currentTo = store.getState()[linkTo.t][linkTo.id]
+
+    if (currentFrom.next.length > 0) {
+      let warning
+      if (currentFrom.next[0].t !== linkTo.t) {
+        warning =
+          "You may only link to dialogue nodes or choice nodes, not both."
+      }
+      if (currentFrom.next[0].t === "dialogues") {
+        warning = "You may only link to one dialogue."
+      }
+      if (
+        currentTo.prev.length > 0 &&
+        currentTo.prev[0].t === "choices" &&
+        linkTo.t === "choices"
+      ) {
+        warning = "You may not link choices together."
+      }
+      if (warning) {
+        store.dispatch(
+          actions.setLinkStatus({ linkStatus: false, linkTo: {}, linkFrom: {} })
+        )
+        return store.dispatch(
+          actions.setWarning({
+            warningMessage: "You may only link to one dialogue.",
+            warning: true
+          })
+        )
+      }
+    }
+    store.dispatch(
+      actions.updateNode({
+        t: from.t,
+        id: from.id,
+        payload: { next: [...currentFrom.next, { t: linkTo.t, id: linkTo.id }] }
+      })
+    )
+    store.dispatch(
+      actions.updateNode({
+        t: linkTo.t,
+        id: linkTo.id,
+        payload: { prev: [...currentTo.prev, { t: from.t, id: from.id }] }
+      })
+    )
+    store.dispatch(
+      actions.setLinkStatus({ linkStatus: false, linkTo: {}, linkFrom: {} })
+    )
   }
 }

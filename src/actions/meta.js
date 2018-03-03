@@ -4,3 +4,20 @@ export const toggleEditor = editorHidden => {
     editorHidden
   }
 }
+
+export const setLinkStatus = ({ linkStatus, linkFrom, linkTo }) => {
+  return {
+    type: "LINK_STATUS",
+    linkStatus,
+    linkFrom,
+    linkTo
+  }
+}
+
+export const setWarning = ({ warningMessage, warning }) => {
+  return {
+    type: "WARNING_MESSAGE",
+    warning,
+    warningMessage
+  }
+}

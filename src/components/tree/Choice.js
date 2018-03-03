@@ -64,7 +64,10 @@ class Dialogue extends Component {
   static propTypes = {
     tags: PropTypes.arrayOf(PropTypes.string),
     body: PropTypes.string,
-    id: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired,
+    updateNode: PropTypes.func.isRequired,
+    bounds: PropTypes.array,
+    pos: PropTypes.array
   }
 
   static defaultProps = {
@@ -82,6 +85,15 @@ class Dialogue extends Component {
 
   adjustWidth = (event, data) => {
     this.setState({ widthAdjustment: data.x })
+  }
+
+  updateWidth = () => {
+    const { bounds, updateNode, id } = this.props
+    updateNode({
+      id,
+      t: "choices",
+      payload: { bounds: [bounds[0] + this.state.widthAdjustment] }
+    })
   }
 
   render() {
@@ -125,7 +137,16 @@ class Dialogue extends Component {
               <FontIcon className="material-icons">delete</FontIcon>
             </IconButton>
           )}
-          <IconButton style={styles.button} iconStyle={styles.icon}>
+          <IconButton
+            style={styles.button}
+            iconStyle={styles.icon}
+            onClick={() =>
+              tree.setLink({
+                linkStatus: true,
+                linkFrom: { t: "choices", id }
+              })
+            }
+          >
             <FontIcon className="material-icons">linear_scale</FontIcon>
           </IconButton>
           <IconButton style={styles.button} iconStyle={styles.icon}>

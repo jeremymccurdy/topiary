@@ -1,20 +1,21 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
-import { FontIcon, FloatingActionButton } from "material-ui"
+import { FontIcon, FloatingActionButton, Snackbar, Slider } from "material-ui"
 import {
   newNode,
   updateNode,
   deleteNode,
   currentEdit,
-  toggleEditor
+  toggleEditor,
+  setWarning
 } from "../actions"
 import DialogueList from "./tree/DialogueList"
 import ChoiceList from "./tree/ChoiceList"
 import LinkList from "./tree/LinkList"
 import rnd from "../lib/rnd"
+import { view } from "../lib/view"
 
-const boundary = 5000
 const zoomStep = 0.03
 const gridSize = 30
 
@@ -28,9 +29,10 @@ const styles = {
   buttonContainer: {
     position: "fixed",
     left: "calc(70vw - 140px)",
-    top: "calc(100vh - 80px)",
+    top: "calc(100vh - 100px)",
     transition: "transform 900ms cubic-bezier(0.445, 0.05, 0.55, 0.95) 0ms",
-    display: "inline"
+    display: "inline",
+    margin: 0
   },
   button: {
     margin: "5px"
@@ -41,8 +43,6 @@ const styles = {
   },
   dragGrid: {
     position: "relative",
-    minHeight: boundary,
-    minWidth: boundary,
     backgroundColor: "white",
     display: "block",
     backgroundSize: `${gridSize}px ${gridSize}px`,
@@ -50,6 +50,7 @@ const styles = {
       "linear-gradient(to right, #EEEEEE 1px, transparent 1px), linear-gradient(to bottom, #EEEEEE 1px, transparent 1px)"
   }
 }
+
 class Tree extends Component {
   static propTypes = {
     dialogues: PropTypes.objectOf(PropTypes.object),
@@ -59,6 +60,7 @@ class Tree extends Component {
     deleteNode: PropTypes.func.isRequired,
     currentEdit: PropTypes.func.isRequired,
     toggleEditor: PropTypes.func.isRequired,
+    setWarning: PropTypes.func.isRequired,
     actors: PropTypes.arrayOf(PropTypes.object),
     meta: PropTypes.shape({
       editorHidden: PropTypes.bool.isRequired
@@ -115,48 +117,64 @@ class Tree extends Component {
     currentEdit({ id: newId, t: "choices" })
   }
 
-  // POSSIBLE ZOOMING
-  // isNegative = n => {
-  //   return ((n = +n) || 1 / n) < 0
-  // }
+  isNegative = n => {
+    return ((n = +n) || 1 / n) < 0
+  }
 
-  // handleZoom = e => {
-  //   if (!e.shiftKey) {
-  //     return
-  //   }
-  //   e.preventDefault()
-  //   const direction =
-  //     this.isNegative(e.deltaX) && this.isNegative(e.deltaY) ? "down" : "up"
-  //   if (direction === "up") {
-  //     this.setState({ scale: this.state.scale + zoomStep })
-  //   } else {
-  //     this.setState({ scale: this.state.scale - zoomStep })
-  //   }
-  //   if (this.state.scale < 0.3) {
-  //     this.setState({ scale: 0.3 })
-  //   }
-  // }
+  handleZoom = e => {
+    if (!e.shiftKey) {
+      return
+    }
+    e.preventDefault()
+    const direction =
+      this.isNegative(e.deltaX) && this.isNegative(e.deltaY) ? "down" : "up"
+    if (direction === "up") {
+      this.setState({ scale: this.state.scale + zoomStep })
+    } else {
+      this.setState({ scale: this.state.scale - zoomStep })
+    }
+    if (this.state.scale < 0.3) {
+      this.setState({ scale: 0.3 })
+    }
+  }
+
+  handleZoomSlider = (e, v) => {
+    this.setState({ scale: v })
+  }
 
   render() {
-    const { meta, dialogues, choices } = this.props
+    const { meta, dialogues, choices, setWarning } = this.props
     const { scale } = this.state
+    const boundary = view.dimensions(
+      [...Object.values(dialogues), ...Object.values(choices)],
+      scale
+    )
     const hideEditor = {
       transform: meta.editorHidden ? "translateX(28vw)" : "translateX(0)"
     }
+
     return (
-      <div style={styles.dragGrid}>
-        {/* <div
+      <div>
+        <div
           style={{
             transform: `scale(${scale})`,
             transition: "transform 0ms linear"
           }}
           id="zoomGrid"
           onWheel={this.handleZoom}
-        > */}
-        <DialogueList {...this.props} gridSize={gridSize} />
-        <ChoiceList {...this.props} gridSize={gridSize} />
-        <LinkList dialogues={dialogues} choices={choices} />
-        {/* </div> */}
+        >
+          <div
+            style={{
+              ...styles.dragGrid,
+              width: boundary.width,
+              height: boundary.height
+            }}
+          >
+            <DialogueList {...this.props} gridSize={gridSize} />
+            <ChoiceList {...this.props} gridSize={gridSize} />
+            <LinkList dialogues={dialogues} choices={choices} />
+          </div>
+        </div>
         <div style={{ ...styles.buttonContainer, ...hideEditor }}>
           <FloatingActionButton
             mini={true}
@@ -173,7 +191,23 @@ class Tree extends Component {
           >
             <FontIcon className="material-icons md-48">chat</FontIcon>
           </FloatingActionButton>
+          <br />
+          <Slider
+            min={0.2}
+            max={1}
+            step={zoomStep}
+            value={scale}
+            onChange={this.handleZoomSlider}
+            sliderStyle={{ marginTop: "5px" }}
+          />
         </div>
+        <Snackbar
+          message={meta.warningMessage}
+          open={meta.warning}
+          onRequestClose={() =>
+            setWarning({ warning: false, warningMessage: "" })
+          }
+        />
       </div>
     )
   }
@@ -193,5 +227,6 @@ export default connect(mapStateToProps, {
   updateNode,
   deleteNode,
   currentEdit,
-  toggleEditor
+  toggleEditor,
+  setWarning
 })(Tree)
