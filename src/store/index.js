@@ -4,9 +4,11 @@ import { composeWithDevTools } from "remote-redux-devtools"
 import reducers from "../reducers"
 
 const initialState = {
-  currentEdit: { t: "dialogues", id: "ujGXGykg" },
+  currentNode: { t: "dialogues", id: "ujGXGykg" },
   dialogues: {
     ujGXGykg: {
+      id: "ujGXGykg",
+      t: "dialogues",
       title: "Start",
       tags: ["Intro", "test"],
       body: "And so our adventure begins...",
@@ -32,6 +34,8 @@ const initialState = {
       ]
     },
     pOm0BT2p: {
+      id: "pOm0BT2p",
+      t: "dialogues",
       title: "Home",
       tags: [],
       body: "You stay at home and do nothing.",
@@ -49,6 +53,8 @@ const initialState = {
       next: []
     },
     fOiYPfJo: {
+      id: "fOiYPfJo",
+      t: "dialogues",
       title: "Venture",
       tags: [],
       body: "You go out and die from a squirrel bite.",
@@ -61,6 +67,8 @@ const initialState = {
       next: []
     },
     lFqf3tkx: {
+      id: "lFqf3tkx",
+      t: "dialogues",
       title: "Cheat",
       tags: [],
       body: "You are a cheater! But well played.",
@@ -75,6 +83,8 @@ const initialState = {
   },
   choices: {
     Ywdbg2Ox: {
+      id: "Ywdbg2Ox",
+      t: "choices",
       body: "I stay at home...",
       tags: ["coward"],
       prev: [{ t: "dialogues", id: "ujGXGykg" }],
@@ -85,6 +95,8 @@ const initialState = {
       conditions: ""
     },
     "3EcmQcOF": {
+      id: "3EcmQcOF",
+      t: "choices",
       body: "I venture forth and begin my adventure!",
       tags: ["brave"],
       prev: [{ t: "dialogues", id: "ujGXGykg" }],
@@ -95,6 +107,8 @@ const initialState = {
       conditions: ""
     },
     c2fPdCPh: {
+      id: "c2fPdCPh",
+      t: "choices",
       body: "I use cheat codes",
       tags: ["cheat"],
       prev: [{ t: "dialogues", id: "ujGXGykg" }],
@@ -111,8 +125,13 @@ const initialState = {
   meta: { editorHidden: false, warning: false, warningMessage: "" }
 }
 
-export default createStore(
-  reducers,
-  initialState,
-  composeWithDevTools(applyMiddleware(logger))
-)
+const store =
+  process.env.NODE_ENV === "development"
+    ? createStore(
+        reducers,
+        initialState,
+        composeWithDevTools(applyMiddleware(logger))
+      )
+    : createStore(reducers, initialState)
+
+export default store

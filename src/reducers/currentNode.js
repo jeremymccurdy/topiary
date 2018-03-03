@@ -1,6 +1,6 @@
-const currentEdit = (state = null, action) => {
+const currentNode = (state = null, action) => {
   switch (action.type) {
-    case "SELECT_EDIT":
+    case "SELECT_NODE":
       return {
         id: action.id,
         t: action.t
@@ -10,4 +10,4 @@ const currentEdit = (state = null, action) => {
   }
 }
 
-export default currentEdit
+export default currentNode

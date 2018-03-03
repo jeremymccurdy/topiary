@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import {
   FontIcon,
@@ -9,19 +10,13 @@ import {
   CardText,
   Chip
 } from "material-ui"
+import { updateNode } from "../../actions"
 import Corner from "./Corner"
 import tree from "../../lib/tree"
 
 const styles = {
-  container: {
-    width: "210px"
-  },
   title: {
-    paddingRight: 20,
-    display: "block",
-    whiteSpace: "nowrap",
-    textOverflow: "ellipsis",
-    overflow: "hidden"
+    paddingRight: 20
   },
   body: {
     overflowWrap: "break-word",
@@ -57,25 +52,47 @@ const styles = {
     fontSize: 11,
     lineHeight: "20px",
     padding: 0
+  },
+  divider: {
+    margin: "5px 0px"
+  },
+  corner: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    margin: 0,
+    padding: 0,
+    transition: `transform 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms`
   }
 }
 
-class Dialogue extends Component {
+class Node extends Component {
   static propTypes = {
+    title: PropTypes.string,
     tags: PropTypes.arrayOf(PropTypes.string),
     body: PropTypes.string,
+    color: PropTypes.string,
     id: PropTypes.string.isRequired,
-    updateNode: PropTypes.func.isRequired,
+    t: PropTypes.string.isRequired,
+    actor: PropTypes.string,
+    dialogues: PropTypes.object,
+    choices: PropTypes.object,
+    currentEdit: PropTypes.object,
+    pos: PropTypes.array,
     bounds: PropTypes.array,
-    pos: PropTypes.array
+    next: PropTypes.array,
+    updateNode: PropTypes.func.isRequired
   }
-
   static defaultProps = {
+    title: "",
     tags: [],
+    actor: "",
+    color: "FFFFFF",
     body: ""
   }
   state = {
     expanded: true,
+    collapsed: false,
     widthAdjustment: 0
   }
 
@@ -83,47 +100,62 @@ class Dialogue extends Component {
     this.setState({ expanded })
   }
 
+  handleCollapse = (next, collapsePos) => {
+    const { pos, updateNode } = this.props
+    if (next) {
+      next.forEach(n => {
+        updateNode({
+          id: n.id,
+          t: n.t,
+          payload: { collapsed: true }
+        })
+      })
+    }
+  }
+
   adjustWidth = (event, data) => {
     this.setState({ widthAdjustment: data.x })
   }
 
   updateWidth = () => {
-    const { bounds, updateNode, id } = this.props
+    const { bounds, updateNode, id, t } = this.props
     updateNode({
       id,
-      t: "choices",
+      t,
       payload: { bounds: [bounds[0] + this.state.widthAdjustment] }
     })
+    this.setState({ widthAdjustment: 0 })
   }
 
   render() {
-    const { id, tags, body } = this.props
+    const { id, t, title, tags, body, color, actor, bounds, next } = this.props
+    const { widthAdjustment } = this.state
     const chipTags = tags.map(tag => (
       <Chip key={tag} style={styles.tagChip} labelStyle={styles.tag}>
         {tag}
       </Chip>
     ))
+
     return (
       <Card
         initiallyExpanded
         expanded={this.state.expanded}
         onExpandChange={this.handleExpandChange}
-        style={{ width: `calc(210px + ${this.state.widthAdjustment}px)` }}
+        style={{ width: `calc(${bounds[0]}px + ${widthAdjustment}px)` }}
       >
         <CardHeader
+          title={title}
+          subtitle={actor}
           showExpandableButton
-          title={this.state.expanded ? "" : body}
-          titleStyle={{
-            ...styles.title,
-            width: `calc(150px + ${this.state.widthAdjustment}px)`
-          }}
           style={{
+            fontWeight: "bold",
             padding: 10,
-            height: 20
+            backgroundColor: `#${color}`
           }}
+          textStyle={styles.title}
           className={"draggable"}
         />
-        <CardText style={styles.body} expandable>
+        <CardText style={styles.body}>
           {tags && <div style={styles.tagWrapper}>{chipTags}</div>}
           {body}
         </CardText>
@@ -132,7 +164,7 @@ class Dialogue extends Component {
             <IconButton
               style={styles.button}
               iconStyle={styles.icon}
-              onClick={() => tree.deleteNode({ t: "choices", id })}
+              onClick={() => tree.deleteNode({ t, id })}
             >
               <FontIcon className="material-icons">delete</FontIcon>
             </IconButton>
@@ -143,20 +175,34 @@ class Dialogue extends Component {
             onClick={() =>
               tree.setLink({
                 linkStatus: true,
-                linkFrom: { t: "choices", id }
+                linkFrom: { t, id }
               })
             }
           >
             <FontIcon className="material-icons">linear_scale</FontIcon>
           </IconButton>
-          <IconButton style={styles.button} iconStyle={styles.icon}>
+          <IconButton
+            style={styles.button}
+            iconStyle={styles.icon}
+            onClick={() => {
+              this.setState({ collapsed: !this.state.collapsed })
+              this.handleCollapse(next)
+            }}
+          >
             <FontIcon className="material-icons">layers</FontIcon>
           </IconButton>
         </CardActions>
-        <Corner adjustWidth={this.adjustWidth} />
+        <Corner adjustWidth={this.adjustWidth} updateWidth={this.updateWidth} />
       </Card>
     )
   }
 }
 
-export default Dialogue
+const mapStateToProps = state => {
+  return {
+    choices: state.choices,
+    dialogues: state.dialogues
+  }
+}
+
+export default connect(mapStateToProps, { updateNode })(Node)

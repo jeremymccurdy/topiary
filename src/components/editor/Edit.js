@@ -29,14 +29,14 @@ class EditTab extends Component {
     actors: PropTypes.arrayOf(PropTypes.object),
     dialogues: PropTypes.objectOf(PropTypes.object),
     choices: PropTypes.objectOf(PropTypes.object),
-    currentEdit: PropTypes.object,
+    currentNode: PropTypes.object,
     updateNode: PropTypes.func.isRequired
   }
 
   static defaultProps = {
     actors: [],
     dialogues: [],
-    currentEdit: {}
+    currentNode: {}
   }
 
   state = {
@@ -45,12 +45,12 @@ class EditTab extends Component {
 
   handleTagsUpdate = event => {
     this.setState({ tagsField: this.state.tagsField + event.key })
-    const { currentEdit, updateNode } = this.props
-    const { tags } = this.props[currentEdit.t][currentEdit.id]
+    const { currentNode, updateNode } = this.props
+    const { tags } = this.props[currentNode.t][currentNode.id]
     if (event.key === "Enter") {
       updateNode({
-        id: currentEdit.id,
-        t: currentEdit.t,
+        id: currentNode.id,
+        t: currentNode.t,
         payload: {
           tags: tags ? [...tags, event.target.value] : [event.target.value]
         }
@@ -60,11 +60,11 @@ class EditTab extends Component {
   }
 
   handleDeleteTag = index => {
-    const { currentEdit, updateNode } = this.props
-    const { tags } = this.props[currentEdit.t][currentEdit.id]
+    const { currentNode, updateNode } = this.props
+    const { tags } = this.props[currentNode.t][currentNode.id]
     updateNode({
-      id: currentEdit.id,
-      t: currentEdit.t,
+      id: currentNode.id,
+      t: currentNode.t,
       payload: {
         tags: tags.filter((tag, i) => i !== index)
       }
@@ -72,27 +72,27 @@ class EditTab extends Component {
   }
 
   handleActorUpdate = (event, index) => {
-    const { updateNode, currentEdit } = this.props
+    const { updateNode, currentNode } = this.props
     updateNode({
-      id: currentEdit.id,
-      t: currentEdit.t,
+      id: currentNode.id,
+      t: currentNode.t,
       payload: { actor: index }
     })
   }
 
   handleTextUpdate = (event, name) => {
-    const { updateNode, currentEdit } = this.props
+    const { updateNode, currentNode } = this.props
     updateNode({
-      id: currentEdit.id,
-      t: currentEdit.t,
+      id: currentNode.id,
+      t: currentNode.t,
       payload: { [name]: event.target.value }
     })
   }
 
   render() {
-    const { actors, currentEdit } = this.props
-    const type = currentEdit.t
-    const node = this.props[currentEdit.t][currentEdit.id]
+    const { actors, currentNode } = this.props
+    const type = currentNode.t
+    const node = this.props[currentNode.t][currentNode.id]
     const menuItems = actors.map((actor, i) => (
       <MenuItem key={actor.name + i} value={i} primaryText={actor.name} />
     ))
@@ -172,7 +172,7 @@ const mapStateToProps = state => {
     actors: state.actors,
     dialogues: state.dialogues,
     choices: state.choices,
-    currentEdit: state.currentEdit
+    currentNode: state.currentNode
   }
 }
 

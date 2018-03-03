@@ -6,15 +6,14 @@ import {
   newNode,
   updateNode,
   deleteNode,
-  currentEdit,
+  selectNode,
   toggleEditor,
   setWarning
 } from "../actions"
-import DialogueList from "./tree/DialogueList"
-import ChoiceList from "./tree/ChoiceList"
-import LinkList from "./tree/LinkList"
+import NodeList from "./tree/NodeList"
+import ArrowList from "./tree/ArrowList"
 import rnd from "../lib/rnd"
-import { view } from "../lib/view"
+import { dimensions } from "../lib/view"
 
 const zoomStep = 0.03
 const gridSize = 30
@@ -58,7 +57,7 @@ class Tree extends Component {
     newNode: PropTypes.func.isRequired,
     updateNode: PropTypes.func.isRequired,
     deleteNode: PropTypes.func.isRequired,
-    currentEdit: PropTypes.func.isRequired,
+    selectNode: PropTypes.func.isRequired,
     toggleEditor: PropTypes.func.isRequired,
     setWarning: PropTypes.func.isRequired,
     actors: PropTypes.arrayOf(PropTypes.object),
@@ -75,46 +74,32 @@ class Tree extends Component {
     scale: 1.0
   }
 
-  handleNewDialogue = () => {
-    const { newNode, currentEdit } = this.props
+  handleNewNode = t => {
+    const { newNode, selectNode } = this.props
     const newId = rnd()
+    const diffs =
+      t === "dialogues"
+        ? { actor: 0, body: "new dialogue" }
+        : { body: "new choice" }
     newNode({
       id: newId,
-      t: "dialogues",
+      t,
       payload: {
-        title: "New",
+        id: newId,
+        t,
+        title: "untitled",
         tags: [],
-        body: "new dialogue",
         pos: [
           window.pageXOffset + window.innerWidth / 2 - 100,
           window.pageYOffset + window.innerHeight / 2 - 50
         ],
+        bounds: [210],
         prev: [],
         next: [],
-        actor: 0
+        ...diffs
       }
     })
-    currentEdit({ id: newId, t: "dialogues" })
-  }
-
-  handleNewChoice = () => {
-    const { newNode, currentEdit } = this.props
-    const newId = rnd()
-    newNode({
-      id: newId,
-      t: "choices",
-      payload: {
-        tags: [],
-        body: "new choice",
-        pos: [
-          window.pageXOffset + window.innerWidth / 2 - 100,
-          window.pageYOffset + window.innerHeight / 2 - 50
-        ],
-        prev: [],
-        next: []
-      }
-    })
-    currentEdit({ id: newId, t: "choices" })
+    selectNode({ id: newId, t })
   }
 
   isNegative = n => {
@@ -145,7 +130,7 @@ class Tree extends Component {
   render() {
     const { meta, dialogues, choices, setWarning } = this.props
     const { scale } = this.state
-    const boundary = view.dimensions(
+    const boundary = dimensions(
       [...Object.values(dialogues), ...Object.values(choices)],
       scale
     )
@@ -170,15 +155,16 @@ class Tree extends Component {
               height: boundary.height
             }}
           >
-            <DialogueList {...this.props} gridSize={gridSize} />
-            <ChoiceList {...this.props} gridSize={gridSize} />
-            <LinkList dialogues={dialogues} choices={choices} />
+            {/* <DialogueList {...this.props} gridSize={gridSize} />
+            <ChoiceList {...this.props} gridSize={gridSize} /> */}
+            <NodeList {...this.props} gridSize={gridSize} />
+            <ArrowList dialogues={dialogues} choices={choices} />
           </div>
         </div>
         <div style={{ ...styles.buttonContainer, ...hideEditor }}>
           <FloatingActionButton
             mini={true}
-            onClick={this.handleNewChoice}
+            onClick={() => this.handleNewNode("choices")}
             style={styles.button}
             secondary
           >
@@ -186,7 +172,7 @@ class Tree extends Component {
           </FloatingActionButton>
           <FloatingActionButton
             style={styles.button}
-            onClick={this.handleNewDialogue}
+            onClick={() => this.handleNewNode("dialogues")}
             secondary
           >
             <FontIcon className="material-icons md-48">chat</FontIcon>
@@ -226,7 +212,7 @@ export default connect(mapStateToProps, {
   newNode,
   updateNode,
   deleteNode,
-  currentEdit,
+  selectNode,
   toggleEditor,
   setWarning
 })(Tree)

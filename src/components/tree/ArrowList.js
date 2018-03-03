@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
-import Link from "./Link"
+import Arrow from "./Arrow"
 
 const styles = {
   dragContainer: {
@@ -9,7 +9,7 @@ const styles = {
   }
 }
 
-export default class LinkList extends Component {
+export default class ArrowList extends Component {
   state = {
     mounted: false
   }
@@ -17,18 +17,18 @@ export default class LinkList extends Component {
     this.setState({ mounted: true })
   }
   render() {
-    const links = []
+    const arrows = []
     const { dialogues, choices } = this.props
     Object.keys(choices).forEach(c => {
       if (choices[c].next && choices[c].pos) {
         choices[c].next.forEach(n => {
           const type = this.props[n.t]
           if (type) {
-            links.push(
-              <Link
+            arrows.push(
+              <Arrow
                 fromId={c}
                 toId={n.id}
-                key={n.id + "link"}
+                key={n.id + "-" + c}
                 from={choices[c].pos}
                 to={type[n.id].pos}
               />
@@ -42,11 +42,11 @@ export default class LinkList extends Component {
         dialogues[d].next.forEach(n => {
           const type = this.props[n.t]
           if (type[n.id]) {
-            links.push(
-              <Link
+            arrows.push(
+              <Arrow
                 fromId={d}
                 toId={n.id}
-                key={n.id + "link"}
+                key={n.id + "-" + d}
                 from={dialogues[d].pos}
                 to={type[n.id].pos}
               />
@@ -75,18 +75,18 @@ export default class LinkList extends Component {
             <path d="M 0 0 L 10 5 L 0 10 z" />
           </marker>
         </defs>
-        {this.state.mounted && links}
+        {this.state.mounted && arrows}
       </svg>
     )
   }
 }
 
-LinkList.propTypes = {
+ArrowList.propTypes = {
   dialogues: PropTypes.object,
   choices: PropTypes.object
 }
 
-LinkList.defaultProps = {
+ArrowList.defaultProps = {
   dialogues: {},
   choices: {}
 }

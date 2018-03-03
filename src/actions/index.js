@@ -1,4 +1,4 @@
-export * from "./currentEdit"
+export * from "./currentNode"
 export * from "./actors"
 export * from "./keys"
 export * from "./colors"

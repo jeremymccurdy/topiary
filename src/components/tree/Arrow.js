@@ -18,7 +18,7 @@ function determineEdge(start, end) {
   return [startSide, endSide]
 }
 
-export default function Link({ from, to, fromId, toId }) {
+export default function Arrow({ from, to, fromId, toId }) {
   const fromBounds = document
     .getElementById(fromId)
     .firstChild.getBoundingClientRect()
@@ -75,7 +75,7 @@ export default function Link({ from, to, fromId, toId }) {
   )
 }
 
-Link.propTypes = {
+Arrow.propTypes = {
   from: PropTypes.array.isRequired,
   to: PropTypes.array.isRequired,
   fromId: PropTypes.string.isRequired,
