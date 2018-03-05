@@ -18,14 +18,23 @@ function determineEdge(start, end) {
   return [startSide, endSide]
 }
 
-export default function Arrow({ from, to, fromId, toId }) {
-  const fromBounds = document.getElementById(fromId).getBoundingClientRect()
-  const toBounds = document.getElementById(toId).getBoundingClientRect()
+export default function Arrow({ from, to, linking, mouse }) {
+  const fromBounds = document.getElementById(from.id).getBoundingClientRect()
+  let toBounds
   const start = {
-    x: from[0] + fromBounds.width / 2,
-    y: from[1] + fromBounds.height / 2
+    x: from.pos[0] + fromBounds.width / 2,
+    y: from.pos[1] + fromBounds.height / 2
   }
-  const end = { x: to[0] + toBounds.width / 2, y: to[1] + toBounds.height / 2 }
+  let end
+  if (linking) {
+    end = { x: mouse.pageX, y: mouse.pageY }
+  } else {
+    toBounds = document.getElementById(to.id).getBoundingClientRect()
+    end = {
+      x: to.pos[0] + toBounds.width / 2,
+      y: to.pos[1] + toBounds.height / 2
+    }
+  }
   const [startSide, endSide] = determineEdge(start, end)
   switch (startSide) {
     case "top":
@@ -45,16 +54,16 @@ export default function Arrow({ from, to, fromId, toId }) {
   }
   switch (endSide) {
     case "top":
-      end.y = end.y - toBounds.height / 2 - 10
+      end.y = linking ? mouse.pageX : end.y - toBounds.height / 2 - 10
       break
     case "bottom":
-      end.y += toBounds.height / 2 + 20
+      end.y += linking ? mouse.pageY : toBounds.height / 2 + 20
       break
     case "right":
-      end.x += toBounds.width / 2 + 20
+      end.x += linking ? mouse.pageY : toBounds.width / 2 + 20
       break
     case "left":
-      end.x = end.x - toBounds.width / 2 - 10
+      end.x = linking ? mouse.pageX : end.x - toBounds.width / 2 - 10
       break
     default:
       break
@@ -72,8 +81,8 @@ export default function Arrow({ from, to, fromId, toId }) {
 }
 
 Arrow.propTypes = {
-  from: PropTypes.array.isRequired,
-  to: PropTypes.array.isRequired,
-  fromId: PropTypes.string.isRequired,
-  toId: PropTypes.string.isRequired
+  from: PropTypes.object.isRequired,
+  to: PropTypes.object.isRequired,
+  linking: PropTypes.bool,
+  mouse: PropTypes.object
 }

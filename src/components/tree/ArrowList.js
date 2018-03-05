@@ -2,13 +2,6 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import Arrow from "./Arrow"
 
-const styles = {
-  dragContainer: {
-    width: "210px",
-    position: "absolute"
-  }
-}
-
 export default class ArrowList extends Component {
   state = {
     mounted: false
@@ -25,13 +18,7 @@ export default class ArrowList extends Component {
           const type = this.props[n.t]
           if (type) {
             arrows.push(
-              <Arrow
-                fromId={c}
-                toId={n.id}
-                key={n.id + "-" + c}
-                from={choices[c].pos}
-                to={type[n.id].pos}
-              />
+              <Arrow key={n.id + "-" + c} from={choices[c]} to={type[n.id]} />
             )
           }
         })
@@ -43,25 +30,14 @@ export default class ArrowList extends Component {
           const type = this.props[n.t]
           if (type[n.id]) {
             arrows.push(
-              <Arrow
-                fromId={d}
-                toId={n.id}
-                key={n.id + "-" + d}
-                from={dialogues[d].pos}
-                to={type[n.id].pos}
-              />
+              <Arrow key={n.id + "-" + d} from={dialogues[d]} to={type[n.id]} />
             )
           }
         })
       }
     })
     return (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="100%"
-        height="100%"
-        style={styles.link}
-      >
+      <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
         <defs>
           <marker
             id="arrowhead"

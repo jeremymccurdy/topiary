@@ -12,6 +12,7 @@ import {
 } from "../actions"
 import NodeList from "./tree/NodeList"
 import ArrowList from "./tree/ArrowList"
+import Arrow from "./tree/Arrow"
 import rnd from "../lib/rnd"
 import { dimensions } from "../lib/view"
 
@@ -45,6 +46,12 @@ const styles = {
     backgroundColor: "white",
     display: "block",
     backgroundSize: `${gridSize}px ${gridSize}px`
+  },
+  arrowlink: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    pointerEvents: "none"
   }
 }
 
@@ -69,7 +76,12 @@ class Tree extends Component {
   }
 
   state = {
-    scale: 1.0
+    scale: 1.0,
+    mouseEvent: {}
+  }
+
+  handleMouse = e => {
+    this.setState({ mouseEvent: { pageX: e.pageX, pageY: e.pageY } })
   }
 
   handleNewNode = t => {
@@ -92,7 +104,6 @@ class Tree extends Component {
         gridSize *
         scale
     ]
-    console.log(newPos)
     newNode({
       id: newId,
       t,
@@ -138,7 +149,7 @@ class Tree extends Component {
 
   render() {
     const { meta, dialogues, choices, setWarning } = this.props
-    const { scale } = this.state
+    const { scale, mouseEvent } = this.state
     const boundary = dimensions(
       [...Object.values(dialogues), ...Object.values(choices)],
       scale
@@ -146,9 +157,8 @@ class Tree extends Component {
     const hideEditor = {
       transform: meta.editorHidden ? "translateX(28vw)" : "translateX(0)"
     }
-
     return (
-      <div>
+      <div onMouseMove={this.handleMouse}>
         <div
           style={{
             transform: `scale(${scale})`,
@@ -170,6 +180,33 @@ class Tree extends Component {
           >
             <NodeList {...this.props} {...this.state} gridSize={gridSize} />
             <ArrowList dialogues={dialogues} choices={choices} />
+            {meta.linkStatus && (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="100%"
+                height="100%"
+                style={styles.arrowlink}
+              >
+                <defs>
+                  <marker
+                    id="arrowhead"
+                    viewBox="0 0 10 10"
+                    refX="3"
+                    refY="5"
+                    markerWidth="6"
+                    markerHeight="6"
+                    orient="auto"
+                  >
+                    <path d="M 0 0 L 10 5 L 0 10 z" />
+                  </marker>
+                </defs>
+                <Arrow
+                  from={this.props[meta.linkFrom.t][meta.linkFrom.id]}
+                  linking={meta.linkStatus}
+                  mouse={mouseEvent}
+                />
+              </svg>
+            )}
           </div>
         </div>
         <div style={{ ...styles.buttonContainer, ...hideEditor }}>
