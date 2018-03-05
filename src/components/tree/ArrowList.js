@@ -42,13 +42,21 @@ export default class ArrowList extends Component {
           <marker
             id="arrowhead"
             viewBox="0 0 10 10"
-            refX="3"
+            refX="10"
             refY="5"
             markerWidth="6"
             markerHeight="6"
             orient="auto"
           >
             <path d="M 0 0 L 10 5 L 0 10 z" />
+            {/* <circle
+              cx="5"
+              cy="5"
+              r="4"
+              stroke="none"
+              strokeWidth="3"
+              fill="red"
+            /> */}
           </marker>
         </defs>
         {this.state.mounted && arrows}

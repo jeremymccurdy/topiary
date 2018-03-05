@@ -178,8 +178,6 @@ class Tree extends Component {
                 scale}px, transparent ${1 / scale}px)`
             }}
           >
-            <NodeList {...this.props} {...this.state} gridSize={gridSize} />
-            <ArrowList dialogues={dialogues} choices={choices} />
             {meta.linkStatus && (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -207,6 +205,8 @@ class Tree extends Component {
                 />
               </svg>
             )}
+            <NodeList {...this.props} {...this.state} gridSize={gridSize} />
+            <ArrowList dialogues={dialogues} choices={choices} />
           </div>
         </div>
         <div style={{ ...styles.buttonContainer, ...hideEditor }}>
@@ -238,7 +238,11 @@ class Tree extends Component {
         <Snackbar
           message={meta.warningMessage}
           open={meta.warning}
+          action={"ok"}
           onRequestClose={() =>
+            setWarning({ warning: false, warningMessage: "" })
+          }
+          onActionClick={() =>
             setWarning({ warning: false, warningMessage: "" })
           }
         />

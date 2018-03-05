@@ -191,7 +191,7 @@ class Node extends Component {
               })
             }
           >
-            <FontIcon className="material-icons">linear_scale</FontIcon>
+            <FontIcon className="material-icons">arrow_forward</FontIcon>
           </IconButton>
           <IconButton
             style={styles.button}

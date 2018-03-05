@@ -1,29 +1,44 @@
 import React from "react"
 import PropTypes from "prop-types"
 
-function determineEdge(start, end) {
-  const startH = start.x - end.x
-  const startV = start.y - end.y
-  const endH = end.x - start.x
-  const endV = end.y - start.y
+function determineEdge(start1, end1, start2, end2) {
+  if (!start1 || !end1 || !start2 || !end2) {
+    return {}
+  }
 
-  const startSide =
-    Math.abs(startH) > Math.abs(startV)
-      ? startH > 0 ? "left" : "right"
-      : startV > 0 ? "top" : "bottom"
-  const endSide =
-    Math.abs(endH) > Math.abs(endV)
-      ? endH > 0 ? "left" : "right"
-      : endV > 0 ? "top" : "bottom"
-  return [startSide, endSide]
+  const coefA1 = end1.y - start1.y
+  const coefB1 = start1.x - end1.x
+  const coefC1 = end1.x * start1.y - start1.x * end1.y
+  const s4 = coefA1 * start2.x + coefB1 * start2.y + coefC1
+  const s3 = coefA1 * end2.x + coefB1 * end2.y + coefC1
+  if (s3 !== 0 && s4 !== 0 && ((s3 >= 0 && s4 >= 0) || (s3 < 0 && s4 < 0))) {
+    return
+  }
+
+  const coefA2 = end2.y - start2.y
+  const coefB2 = start2.x - end2.x
+  const coefC2 = end2.x * start2.y - start2.x * end2.y
+  const s1 = coefA2 * start1.x + coefB2 * start1.y + coefC2
+  const s2 = coefA2 * end1.x + coefB2 * end1.y + coefC2
+  if (s1 !== 0 && s2 !== 0 && ((s1 >= 0 && s2 >= 0) || (s1 < 0 && s2 < 0))) {
+    return
+  }
+
+  const denominator = coefA1 * coefB2 - coefA2 * coefB1
+  const x = coefB1 * coefC2 - coefB2 * coefC1
+  const y = coefA2 * coefC1 - coefA1 * coefC2
+  return {
+    x: x / denominator,
+    y: y / denominator
+  }
 }
 
 export default function Arrow({ from, to, linking, mouse }) {
   const fromBounds = document.getElementById(from.id).getBoundingClientRect()
   let toBounds
   const start = {
-    x: from.pos[0] + fromBounds.width / 2,
-    y: from.pos[1] + fromBounds.height / 2
+    x: fromBounds.left + window.scrollX + fromBounds.width / 2,
+    y: fromBounds.top + window.scrollY + fromBounds.height / 2
   }
   let end
   if (linking) {
@@ -31,42 +46,35 @@ export default function Arrow({ from, to, linking, mouse }) {
   } else {
     toBounds = document.getElementById(to.id).getBoundingClientRect()
     end = {
-      x: to.pos[0] + toBounds.width / 2,
-      y: to.pos[1] + toBounds.height / 2
+      x: toBounds.left + window.scrollX + toBounds.width / 2,
+      y: toBounds.top + window.scrollY + toBounds.height / 2
     }
   }
-  const [startSide, endSide] = determineEdge(start, end)
-  switch (startSide) {
-    case "top":
-      start.y -= fromBounds.height / 2
-      break
-    case "bottom":
-      start.y += fromBounds.height / 2
-      break
-    case "right":
-      start.x += fromBounds.width / 2
-      break
-    case "left":
-      start.x -= fromBounds.width / 2
-      break
-    default:
-      break
-  }
-  switch (endSide) {
-    case "top":
-      end.y = linking ? mouse.pageX : end.y - toBounds.height / 2 - 10
-      break
-    case "bottom":
-      end.y += linking ? mouse.pageY : toBounds.height / 2 + 20
-      break
-    case "right":
-      end.x += linking ? mouse.pageY : toBounds.width / 2 + 20
-      break
-    case "left":
-      end.x = linking ? mouse.pageX : end.x - toBounds.width / 2 - 10
-      break
-    default:
-      break
+  if (linking) {
+    end.y = mouse.pageY
+    end.x = mouse.pageX
+  } else {
+    const TL = {
+      x: toBounds.left + window.scrollX,
+      y: toBounds.top + window.scrollY
+    }
+    const TR = {
+      x: toBounds.left + window.scrollX + toBounds.width,
+      y: toBounds.top + window.scrollY
+    }
+    const BL = {
+      x: toBounds.left + window.scrollX,
+      y: toBounds.top + window.scrollY + toBounds.height
+    }
+    const BR = {
+      x: toBounds.left + window.scrollX + toBounds.width,
+      y: toBounds.top + window.scrollY + toBounds.height
+    }
+    const top = determineEdge(start, end, TL, TR) // top
+    const bottom = determineEdge(start, end, BL, BR) // bottom
+    const left = determineEdge(start, end, TL, BL) // left
+    const right = determineEdge(start, end, TR, BR) // right
+    end = top || bottom || left || right
   }
   const dStr = `M${start.x} ${start.y} L ${end.x} ${end.y}`
   return (
@@ -82,7 +90,7 @@ export default function Arrow({ from, to, linking, mouse }) {
 
 Arrow.propTypes = {
   from: PropTypes.object.isRequired,
-  to: PropTypes.object.isRequired,
+  to: PropTypes.object,
   linking: PropTypes.bool,
   mouse: PropTypes.object
 }
