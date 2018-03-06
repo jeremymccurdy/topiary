@@ -18,11 +18,23 @@ const styles = {
   title: {
     paddingRight: 20
   },
+  subtitle: {
+    fontSize: 11
+  },
+  choicesTitle: {
+    display: "block",
+    width: "80%",
+    padding: 0,
+    textOverflow: "ellipsis",
+    overflow: "hidden",
+    whiteSpace: "nowrap"
+  },
   body: {
     overflowWrap: "break-word",
     whiteSpace: "pre-wrap",
     padding: "2px 10px 5px",
-    margin: "5px 0px 0px"
+    margin: "5px 0px 0px",
+    fontSize: 11
   },
   footer: {
     height: "16px",
@@ -128,11 +140,9 @@ class Node extends Component {
     this.setState({ widthAdjustment: 0 })
   }
 
-  currentNodeColor = () => {
+  isCurrentNode = () => {
     const { id, currentNode } = this.props
     return currentNode.id === id
-      ? `linear-gradient(0deg, #43a047 10%, #FFFFFF 10%)`
-      : "#FFFFFF"
   }
 
   render() {
@@ -148,18 +158,23 @@ class Node extends Component {
         initiallyExpanded
         expanded={this.state.expanded}
         onExpandChange={this.handleExpandChange}
-        style={{ width: `calc(${bounds[0]}px + ${widthAdjustment}px)` }}
+        style={{
+          width: `calc(${bounds[0]}px + ${widthAdjustment}px)`
+        }}
       >
         <CardHeader
-          title={title}
+          title={t === "dialogues" ? title : this.state.expanded ? "" : body}
           subtitle={actor}
+          subtitleStyle={styles.subtitle}
           showExpandableButton
           style={{
             fontWeight: "bold",
             padding: 10,
-            backgroundColor: `#${color}`
+            backgroundColor: `#${color}`,
+            width: "100%"
           }}
-          textStyle={styles.title}
+          titleStyle={t === "choices" ? styles.choicesTitle : styles.title}
+          textStyle={{ display: "block", padding: 0 }}
           className={"draggable"}
         />
         <CardText style={styles.body} expandable>
@@ -169,7 +184,9 @@ class Node extends Component {
         <CardActions
           style={{
             ...styles.footer,
-            background: this.currentNodeColor()
+            background: this.isCurrentNode()
+              ? `linear-gradient(0deg, #43a047 10%, #FFFFFF 10%)`
+              : "#FFFFFF"
           }}
         >
           {this.state.expanded && (

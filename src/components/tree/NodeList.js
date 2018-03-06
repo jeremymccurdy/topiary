@@ -45,6 +45,14 @@ export default class NodeList extends Component {
     })
     this.setState({ xAdjust: 0, yAdjust: 0 })
   }
+
+  isCurrentNode = n => {
+    const { currentNode } = this.props
+    if (currentNode) {
+      return currentNode.id === n.id
+    }
+  }
+
   render() {
     const {
       dialogues,
@@ -77,7 +85,13 @@ export default class NodeList extends Component {
             this.handleNodePositionUpdate(e, data, n.id, n.t)
           }
         >
-          <div id={n.id} style={styles.dragContainer}>
+          <div
+            id={n.id}
+            style={{
+              ...styles.dragContainer,
+              zIndex: this.isCurrentNode(n) ? 10 : 1
+            }}
+          >
             <Node
               id={n.id}
               t={n.t}

@@ -70,10 +70,10 @@ export default function Arrow({ from, to, linking, mouse }) {
       x: toBounds.left + window.scrollX + toBounds.width,
       y: toBounds.top + window.scrollY + toBounds.height
     }
-    const top = determineEdge(start, end, TL, TR) // top
-    const bottom = determineEdge(start, end, BL, BR) // bottom
-    const left = determineEdge(start, end, TL, BL) // left
-    const right = determineEdge(start, end, TR, BR) // right
+    const top = determineEdge(start, end, TL, TR)
+    const bottom = determineEdge(start, end, BL, BR)
+    const left = determineEdge(start, end, TL, BL)
+    const right = determineEdge(start, end, TR, BR)
     end = top || bottom || left || right
   }
   const dStr = `M${start.x} ${start.y} L ${end.x} ${end.y}`

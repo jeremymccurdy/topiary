@@ -51,7 +51,8 @@ const styles = {
     position: "absolute",
     top: 0,
     left: 0,
-    pointerEvents: "none"
+    pointerEvents: "none",
+    zIndex: 4
   }
 }
 
@@ -256,7 +257,8 @@ const mapStateToProps = state => {
     dialogues: state.dialogues,
     choices: state.choices,
     actors: state.actors,
-    meta: state.meta
+    meta: state.meta,
+    currentNode: state.currentNode
   }
 }
 
