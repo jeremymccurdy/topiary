@@ -6,7 +6,8 @@ import { newActor, updateActor, deleteActor } from "../../actions"
 
 const styles = {
   textStyle: {
-    fontFamily: "Roboto Mono"
+    fontFamily: "Roboto Mono",
+    fontSize: 12
   },
   tabContent: {
     margin: "20px"

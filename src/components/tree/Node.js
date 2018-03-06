@@ -194,6 +194,7 @@ class Node extends Component {
               style={styles.button}
               iconStyle={styles.icon}
               onClick={() => tree.deleteNode({ t, id })}
+              data-tip={"Delete"}
             >
               <FontIcon className="material-icons">delete</FontIcon>
             </IconButton>
@@ -207,6 +208,7 @@ class Node extends Component {
                 linkFrom: { t, id }
               })
             }
+            data-tip={"Link"}
           >
             <FontIcon className="material-icons">arrow_forward</FontIcon>
           </IconButton>
@@ -217,6 +219,7 @@ class Node extends Component {
               this.setState({ collapsed: !this.state.collapsed })
               this.handleCollapse(next)
             }}
+            data-tip={"Collapse"}
           >
             <FontIcon className="material-icons">layers</FontIcon>
           </IconButton>

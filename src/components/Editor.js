@@ -98,22 +98,27 @@ class Editor extends Component {
             <BottomNavigationItem
               icon={editIcon}
               onClick={() => this.select(0)}
+              data-tip={"Edit"}
             />
             <BottomNavigationItem
               icon={actorIcon}
               onClick={() => this.select(1)}
+              data-tip={"Actors"}
             />
             <BottomNavigationItem
               icon={keyIcon}
               onClick={() => this.select(2)}
+              data-tip={"Variables"}
             />
             <BottomNavigationItem
               icon={helpIcon}
               onClick={() => this.select(3)}
+              data-tip={"Help"}
             />
             <BottomNavigationItem
               icon={settingsIcon}
               onClick={() => this.select(4)}
+              data-tip={"Settings"}
             />
           </BottomNavigation>
         </div>

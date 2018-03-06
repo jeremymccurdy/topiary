@@ -29,8 +29,8 @@ export default function Corner({ adjustWidth, updateWidth }) {
         height="10"
         viewBox="0 0 10 10"
         aria-labelledby="corner"
+        data-tip={"Resize"}
       >
-        <title id="corner">corner</title>
         <polygon
           points="10 0, 10 10, 0 10"
           stroke="black"

@@ -13,6 +13,7 @@ import {
 import NodeList from "./tree/NodeList"
 import ArrowList from "./tree/ArrowList"
 import Arrow from "./tree/Arrow"
+import Tooltip from "./Tooltip"
 import rnd from "../lib/rnd"
 import { dimensions } from "../lib/view"
 
@@ -216,6 +217,7 @@ class Tree extends Component {
             onClick={() => this.handleNewNode("choices")}
             style={styles.button}
             secondary
+            data-tip={"New Choice"}
           >
             <FontIcon className="material-icons">question_answer</FontIcon>
           </FloatingActionButton>
@@ -223,6 +225,7 @@ class Tree extends Component {
             style={styles.button}
             onClick={() => this.handleNewNode("dialogues")}
             secondary
+            data-tip={"New Dialogue"}
           >
             <FontIcon className="material-icons md-48">chat</FontIcon>
           </FloatingActionButton>
@@ -247,6 +250,7 @@ class Tree extends Component {
             setWarning({ warning: false, warningMessage: "" })
           }
         />
+        <Tooltip />
       </div>
     )
   }
