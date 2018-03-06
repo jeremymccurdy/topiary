@@ -41,6 +41,37 @@ const styles = {
   }
 }
 
+const positions = {
+  top: bounds => {
+    return {
+      x: bounds.left + bounds.width / 2,
+      y: bounds.top,
+      transform: "translateY(-120%) translateX(-50%)"
+    }
+  },
+  bottom: bounds => {
+    return {
+      x: bounds.left + bounds.width / 2,
+      y: bounds.bottom,
+      transform: "translateY(100%) translateX(-50%)"
+    }
+  },
+  left: bounds => {
+    return {
+      x: bounds.left,
+      y: bounds.top + bounds.height / 2,
+      transform: "translateY(-50%) translateX(-120%)"
+    }
+  },
+  right: bounds => {
+    return {
+      x: bounds.right,
+      y: bounds.top + bounds.height / 2,
+      transform: "translateY(-50%) translateX(20%)"
+    }
+  }
+}
+
 export default class Tooltip extends Component {
   state = {
     position: "",
@@ -53,39 +84,44 @@ export default class Tooltip extends Component {
   componentDidMount() {
     const elems = document.querySelectorAll("[data-tip]")
     elems.forEach(elem => {
-      elem.addEventListener("mouseenter", this.Listener(elem))
-      elem.addEventListener("mouseleave", this.Listener(elem))
+      elem.addEventListener("mouseenter", this.listener(elem))
+      elem.addEventListener("mouseleave", this.listener(elem))
     })
   }
 
   componentWillUnmount() {
     const elems = document.querySelectorAll("[data-tip]")
     elems.forEach(elem => {
-      elem.removeEventListener("mouseenter", this.Listener(elem))
-      elem.removeEventListener("mouseleave", this.Listener(elem))
+      elem.removeEventListener("mouseenter", this.listener(elem))
+      elem.removeEventListener("mouseleave", this.listener(elem))
     })
   }
-  Listener = elem => {
+
+  listener = elem => {
     const handleVisibility = e => {
       const bounds = elem.getBoundingClientRect()
+      const { x, y, transform } = elem.dataset.tippos
+        ? positions[elem.dataset.tippos](bounds)
+        : positions["top"](bounds)
       this.setState({
         visible: e.type === "mouseenter",
         tip: elem.dataset.tip,
-        x: bounds.left + bounds.width / 2,
-        y: bounds.top
+        x,
+        y,
+        transform
       })
     }
     return handleVisibility
   }
 
   render() {
-    const { tip, visible, x, y } = this.state
+    const { tip, visible, x, y, transform } = this.state
     const fade = {
-      transform: "translateY(-120%) translateX(-50%)",
       transition: visible ? "opacity 600ms ease 200ms" : "none",
       opacity: visible ? 100 : 0,
       top: y,
-      left: x
+      left: x,
+      transform
     }
 
     return (

@@ -9,7 +9,8 @@ const styles = {
     right: 0,
     margin: 0,
     padding: 0,
-    transition: `transform 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms`
+    transition: `transform 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms`,
+    cursor: "pointer"
   }
 }
 
@@ -30,6 +31,7 @@ export default function Corner({ adjustWidth, updateWidth }) {
         viewBox="0 0 10 10"
         aria-labelledby="corner"
         data-tip={"Resize"}
+        data-tippos={"bottom"}
       >
         <polygon
           points="10 0, 10 10, 0 10"
