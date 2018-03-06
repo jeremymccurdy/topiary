@@ -2,6 +2,8 @@
 
 Dialogue Tree Editor inspired by [twinery](twinery.org) created with React.
 
+![Topiary Screenshot](https://github.com/bgk-/topiary/blob/master/docs/topiary.png)
+
 ### Installation
 
 1.  clone repo
@@ -29,6 +31,7 @@ Dialogue Tree Editor inspired by [twinery](twinery.org) created with React.
 * [x] Add actors
 * [x] Delete actors (need to address nodes to actor relationship)
 * [ ] Add custom colours
-* [ ] Tooltips
+* [x] Tooltips (needs to be expanded upon)
 * [ ] Zoom functionality
+* [ ] Settings and Help tabs
 * [ ] Load/Save files
