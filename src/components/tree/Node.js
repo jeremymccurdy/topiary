@@ -209,7 +209,9 @@ class Node extends Component {
                 linkFrom: { t, id }
               })
             }
-            data-tip={"Link"}
+            data-tip={
+              "Link.\nClick a link to move to another node.\nTo cancel a link click anywhere on the grid."
+            }
             data-tippos={"bottom"}
           >
             <FontIcon className="material-icons">arrow_forward</FontIcon>

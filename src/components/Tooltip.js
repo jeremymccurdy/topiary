@@ -1,43 +1,22 @@
 import React, { Component } from "react"
 
 const styles = {
-  wrapper: {
-    position: "relative",
-    display: "inline-block",
-    zIndex: "98"
-  },
   container: {
     backgroundColor: `rgba(0,0,0,0.6)`,
     position: "fixed",
     boxSizing: "border-box",
     borderRadius: "4px",
     zIndex: "99",
-    marginBottom: "10px",
+    margin: "0px",
     padding: "5px",
     color: "#FFFFFF",
     textAlign: "center",
     pointerEvents: "none"
   },
-  arrow: {
-    position: "absolute",
-    bottom: "-5px",
-    widht: "5px",
-    height: "5px",
-    left: "50%",
-    marginLeft: "-5px",
-    borderLeft: "solid transparent 5px",
-    borderRight: "solid transparent 5px",
-    borderTop: "solid transparent 5px"
-  },
-  spacer: {
-    position: "absolute",
-    width: "100%",
-    height: "20px",
-    bottom: "-20px"
-  },
   tip: {
-    display: "inline-block",
-    fontSize: "0.8em"
+    display: "block",
+    fontSize: "0.8em",
+    whiteSpace: "pre-wrap"
   }
 }
 
@@ -53,7 +32,7 @@ const positions = {
     return {
       x: bounds.left + bounds.width / 2,
       y: bounds.bottom,
-      transform: "translate(-50%, 100%)"
+      transform: "translate(-50%, 5px)"
     }
   },
   left: bounds => {
@@ -100,7 +79,7 @@ export default class Tooltip extends Component {
   listener = elem => {
     const handleVisibility = e => {
       const bounds = elem.getBoundingClientRect()
-      const { x, y, transform } = elem.dataset.tippos
+      const { x, y, transform, arrowTransform } = elem.dataset.tippos
         ? positions[elem.dataset.tippos](bounds)
         : positions["top"](bounds)
       this.setState({
@@ -133,7 +112,6 @@ export default class Tooltip extends Component {
       >
         <div style={styles.tip}>{tip}</div>
         <div style={styles.arrow} />
-        <div style={styles.spacer} />
       </div>
     )
   }
