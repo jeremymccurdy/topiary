@@ -12,25 +12,25 @@ export default class ArrowList extends Component {
   render() {
     const arrows = []
     const { dialogues, choices } = this.props
-    Object.keys(choices).forEach(c => {
-      if (choices[c].next && choices[c].pos) {
-        choices[c].next.forEach(n => {
+    Object.values(choices).forEach(c => {
+      if (c.next && c.pos) {
+        c.next.forEach(n => {
           const type = this.props[n.t]
           if (type) {
             arrows.push(
-              <Arrow key={n.id + "-" + c} from={choices[c]} to={type[n.id]} />
+              <Arrow key={n.id + "-" + c.id} from={c} to={type[n.id]} />
             )
           }
         })
       }
     })
-    Object.keys(dialogues).forEach(d => {
-      if (dialogues[d].next && dialogues[d].pos) {
-        dialogues[d].next.forEach(n => {
+    Object.values(dialogues).forEach(d => {
+      if (d.next && d.pos) {
+        d.next.forEach(n => {
           const type = this.props[n.t]
           if (type[n.id]) {
             arrows.push(
-              <Arrow key={n.id + "-" + d} from={dialogues[d]} to={type[n.id]} />
+              <Arrow key={n.id + "-" + d.id} from={d} to={type[n.id]} />
             )
           }
         })

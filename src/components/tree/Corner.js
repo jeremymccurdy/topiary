@@ -21,7 +21,6 @@ export default function Corner({ adjustWidth, updateWidth }) {
       grid={[30, 30]}
       onDrag={(e, d) => adjustWidth(e, d)}
       onStop={updateWidth}
-      bounds={{ left: 0 }}
     >
       <svg
         style={styles.corner}

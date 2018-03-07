@@ -34,4 +34,5 @@ Dialogue Tree Editor inspired by [twinery](twinery.org) created with React.
 * [x] Tooltips (needs to be expanded upon)
 * [ ] Zoom functionality
 * [ ] Settings and Help tabs
+* [ ] Search funcationality
 * [ ] Load/Save files

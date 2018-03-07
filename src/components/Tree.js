@@ -15,6 +15,7 @@ import ArrowList from "./tree/ArrowList"
 import Arrow from "./tree/Arrow"
 import Tooltip from "./Tooltip"
 import rnd from "../lib/rnd"
+import tree from "../lib/tree"
 import { dimensions } from "../lib/view"
 
 const zoomStep = 0.03
@@ -178,6 +179,9 @@ class Tree extends Component {
                 scale}px, transparent ${1 /
                 scale}px), linear-gradient(to bottom, #EEEEEE ${1 /
                 scale}px, transparent ${1 / scale}px)`
+            }}
+            onClick={() => {
+              if (meta.linkStatus) return tree.setLink({ linkTo: null })
             }}
           >
             {meta.linkStatus && (

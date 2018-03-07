@@ -1,32 +1,33 @@
 import React from "react"
 import PropTypes from "prop-types"
+import tree from "../../lib/tree"
 
 function determineEdge(start1, end1, start2, end2) {
   if (!start1 || !end1 || !start2 || !end2) {
     return {}
   }
 
-  const coefA1 = end1.y - start1.y
-  const coefB1 = start1.x - end1.x
-  const coefC1 = end1.x * start1.y - start1.x * end1.y
-  const s4 = coefA1 * start2.x + coefB1 * start2.y + coefC1
-  const s3 = coefA1 * end2.x + coefB1 * end2.y + coefC1
+  const deltaA1 = end1.y - start1.y
+  const deltaB1 = start1.x - end1.x
+  const deltaC1 = end1.x * start1.y - start1.x * end1.y
+  const s4 = deltaA1 * start2.x + deltaB1 * start2.y + deltaC1
+  const s3 = deltaA1 * end2.x + deltaB1 * end2.y + deltaC1
   if (s3 !== 0 && s4 !== 0 && ((s3 >= 0 && s4 >= 0) || (s3 < 0 && s4 < 0))) {
     return
   }
 
-  const coefA2 = end2.y - start2.y
-  const coefB2 = start2.x - end2.x
-  const coefC2 = end2.x * start2.y - start2.x * end2.y
-  const s1 = coefA2 * start1.x + coefB2 * start1.y + coefC2
-  const s2 = coefA2 * end1.x + coefB2 * end1.y + coefC2
+  const deltaA2 = end2.y - start2.y
+  const deltaB2 = start2.x - end2.x
+  const deltaC2 = end2.x * start2.y - start2.x * end2.y
+  const s1 = deltaA2 * start1.x + deltaB2 * start1.y + deltaC2
+  const s2 = deltaA2 * end1.x + deltaB2 * end1.y + deltaC2
   if (s1 !== 0 && s2 !== 0 && ((s1 >= 0 && s2 >= 0) || (s1 < 0 && s2 < 0))) {
     return
   }
 
-  const denominator = coefA1 * coefB2 - coefA2 * coefB1
-  const x = coefB1 * coefC2 - coefB2 * coefC1
-  const y = coefA2 * coefC1 - coefA1 * coefC2
+  const denominator = deltaA1 * deltaB2 - deltaA2 * deltaB1
+  const x = deltaB1 * deltaC2 - deltaB2 * deltaC1
+  const y = deltaA2 * deltaC1 - deltaA1 * deltaC2
   return {
     x: x / denominator,
     y: y / denominator
@@ -84,6 +85,12 @@ export default function Arrow({ from, to, linking, mouse }) {
       stroke="black"
       strokeWidth="2px"
       fill="none"
+      onClick={() =>
+        tree.moveLink({
+          linkFrom: { t: from.t, id: from.id },
+          linkTo: { t: to.t, id: to.id }
+        })
+      }
     />
   )
 }

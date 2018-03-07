@@ -29,6 +29,11 @@ export default {
     if (linkStatus) {
       return store.dispatch(actions.setLinkStatus({ linkStatus, linkFrom }))
     }
+    if (linkTo === null) {
+      return store.dispatch(
+        actions.setLinkStatus({ linkStatus: false, linkFrom: null })
+      )
+    }
     const from = store.getState().meta.linkFrom
     const currentFrom = store.getState()[from.t][from.id]
     const currentTo = store.getState()[linkTo.t][linkTo.id]
@@ -51,7 +56,11 @@ export default {
       }
       if (warning) {
         store.dispatch(
-          actions.setLinkStatus({ linkStatus: false, linkTo: {}, linkFrom: {} })
+          actions.setLinkStatus({
+            linkStatus: false,
+            linkTo: {},
+            linkFrom: {}
+          })
         )
         return store.dispatch(
           actions.setWarning({
@@ -65,7 +74,9 @@ export default {
       actions.updateNode({
         t: from.t,
         id: from.id,
-        payload: { next: [...currentFrom.next, { t: linkTo.t, id: linkTo.id }] }
+        payload: {
+          next: [...currentFrom.next, { t: linkTo.t, id: linkTo.id }]
+        }
       })
     )
     store.dispatch(
@@ -78,5 +89,43 @@ export default {
     store.dispatch(
       actions.setLinkStatus({ linkStatus: false, linkTo: {}, linkFrom: {} })
     )
+  },
+  deleteLink: ({ linkFrom, linkTo }) => {
+    const next = store.getState()[linkFrom.t][linkFrom.id].next
+    const prev = store.getState()[linkTo.t][linkTo.id].prev
+    store.dispatch(
+      actions.updateNode({
+        t: linkFrom.t,
+        id: linkFrom.id,
+        payload: {
+          next: next.reduce((acc, node) => {
+            if (node.id !== linkTo.id) {
+              acc.push(node)
+            }
+            return acc
+          }, [])
+        }
+      })
+    )
+    store.dispatch(
+      actions.updateNode({
+        t: linkTo.t,
+        id: linkTo.id,
+        payload: {
+          prev: prev.reduce((acc, node) => {
+            if (node.id !== linkFrom.id) {
+              acc.push(node)
+            }
+            return acc
+          }, [])
+        }
+      })
+    )
+  },
+  moveLink: ({ linkFrom, linkTo }) => {
+    // hackey, better to break out and export each function seperately
+    this.a.deleteLink({ linkFrom, linkTo })
+    store.dispatch(actions.selectNode(linkFrom))
+    this.a.setLink({ linkStatus: true, linkFrom })
   }
 }

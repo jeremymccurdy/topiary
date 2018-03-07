@@ -46,28 +46,28 @@ const positions = {
     return {
       x: bounds.left + bounds.width / 2,
       y: bounds.top,
-      transform: "translateY(-120%) translateX(-50%)"
+      transform: "translate(-50%, -120%)"
     }
   },
   bottom: bounds => {
     return {
       x: bounds.left + bounds.width / 2,
       y: bounds.bottom,
-      transform: "translateY(100%) translateX(-50%)"
+      transform: "translate(-50%, 100%)"
     }
   },
   left: bounds => {
     return {
       x: bounds.left,
       y: bounds.top + bounds.height / 2,
-      transform: "translateY(-50%) translateX(-120%)"
+      transform: "translate(-120%, -50%)"
     }
   },
   right: bounds => {
     return {
       x: bounds.right,
       y: bounds.top + bounds.height / 2,
-      transform: "translateY(-50%) translateX(20%)"
+      transform: "translate(20%, -50%)"
     }
   }
 }
