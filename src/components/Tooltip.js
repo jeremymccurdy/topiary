@@ -79,7 +79,7 @@ export default class Tooltip extends Component {
   listener = elem => {
     const handleVisibility = e => {
       const bounds = elem.getBoundingClientRect()
-      const { x, y, transform, arrowTransform } = elem.dataset.tippos
+      const { x, y, transform } = elem.dataset.tippos
         ? positions[elem.dataset.tippos](bounds)
         : positions["top"](bounds)
       this.setState({
