@@ -20,6 +20,7 @@ Dialogue Tree Editor inspired by [twinery](twinery.org) created with React.
 * react-redux
 * react-scripts
 * redux
+* reselect
 
 ### To do
 
