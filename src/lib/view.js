@@ -1,6 +1,19 @@
 const winWidth = window.innerWidth
 const winHeight = window.innerHeight
 
+export const gridSize = 30
+
+export const layers = Object.freeze({
+  GRID: 0,
+  ARROWS: 3,
+  TREE: 4,
+  CURRENTTREEARROWS: 6,
+  CURRENTTREE: 7,
+  OVERLAY: 8,
+  CURRENTARROW: 9,
+  CURRENTNODE: 10
+})
+
 export function dimensions(nodes, scale) {
   let width = winWidth
   let height = winHeight

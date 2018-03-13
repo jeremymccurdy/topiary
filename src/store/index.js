@@ -1,128 +1,112 @@
 import { createStore, applyMiddleware } from "redux"
 import { logger } from "redux-logger"
 import { composeWithDevTools } from "remote-redux-devtools"
-import reducers from "../reducers"
+import reducers from "./reducers"
 
 const initialState = {
-  currentNode: { t: "dialogues", id: "ujGXGykg" },
-  dialogues: {
+  currentNode: "ujGXGykg",
+  currentLink: { status: false, from: "", to: "" },
+  nodes: {
     ujGXGykg: {
       id: "ujGXGykg",
-      t: "dialogues",
+      type: "dialogue",
       title: "Start",
       tags: ["Intro", "test"],
       body: "And so our adventure begins...",
       pos: [910, 90],
       bounds: [210],
+      linkable: true,
       collapsed: false,
       actor: 0,
-      conditions: "Game.Start == true",
-      prev: [],
-      next: [
-        {
-          t: "choices",
-          id: "Ywdbg2Ox"
-        },
-        {
-          t: "choices",
-          id: "3EcmQcOF"
-        },
-        {
-          t: "choices",
-          id: "c2fPdCPh"
-        }
-      ]
+      conditions: "Game.Start == true"
     },
     pOm0BT2p: {
       id: "pOm0BT2p",
-      t: "dialogues",
+      type: "dialogue",
       title: "Home",
       tags: [],
       body: "You stay at home and do nothing.",
       pos: [600, 500],
       bounds: [210],
+      linkable: true,
       collapsed: false,
       actor: 0,
-      conditions: "",
-      prev: [
-        {
-          t: "choices",
-          id: "Ywdbg2Ox"
-        }
-      ],
-      next: []
+      conditions: ""
     },
     fOiYPfJo: {
       id: "fOiYPfJo",
-      t: "dialogues",
+      type: "dialogue",
       title: "Venture",
       tags: [],
       body: "You go out and die from a squirrel bite.",
       pos: [910, 500],
       bounds: [210],
+      linkable: true,
       collapsed: false,
       actor: 0,
-      conditions: "",
-      prev: [{ t: "choices", id: "3EcmQcOF" }],
-      next: []
+      conditions: ""
     },
     lFqf3tkx: {
       id: "lFqf3tkx",
-      t: "dialogues",
+      type: "dialogue",
       title: "Cheat",
       tags: [],
       body: "You are a cheater! But well played.",
       pos: [1210, 500],
       bounds: [210],
+      linkable: true,
       collapsed: false,
       actor: 0,
-      conditions: "",
-      prev: [{ t: "choices", id: "c2fPdCPh" }],
-      next: []
-    }
-  },
-  choices: {
+      conditions: ""
+    },
     Ywdbg2Ox: {
       id: "Ywdbg2Ox",
-      t: "choices",
+      type: "choice",
       body: "I stay at home...",
       tags: ["coward"],
-      prev: [{ t: "dialogues", id: "ujGXGykg" }],
-      next: [{ t: "dialogues", id: "pOm0BT2p" }],
       pos: [600, 360],
       bounds: [210],
+      linkable: true,
       collapsed: false,
       conditions: ""
     },
     "3EcmQcOF": {
       id: "3EcmQcOF",
-      t: "choices",
+      type: "choice",
       body: "I venture forth and begin my adventure!",
       tags: ["brave"],
-      prev: [{ t: "dialogues", id: "ujGXGykg" }],
-      next: [{ t: "dialogues", id: "fOiYPfJo" }],
       pos: [910, 360],
       bounds: [210],
+      linkable: true,
       collapsed: false,
       conditions: ""
     },
     c2fPdCPh: {
       id: "c2fPdCPh",
-      t: "choices",
+      type: "choice",
       body: "I use cheat codes",
       tags: ["cheat"],
-      prev: [{ t: "dialogues", id: "ujGXGykg" }],
-      next: [{ t: "dialogues", id: "lFqf3tkx" }],
       pos: [1210, 360],
       bounds: [210],
+      linkable: true,
       collapsed: false,
       conditions: "cheater == true"
     }
   },
+  links: [
+    ["ujGXGykg", "Ywdbg2Ox"],
+    ["ujGXGykg", "3EcmQcOF"],
+    ["ujGXGykg", "c2fPdCPh"],
+    ["Ywdbg2Ox", "pOm0BT2p"],
+    ["3EcmQcOF", "fOiYPfJo"],
+    ["c2fPdCPh", "lFqf3tkx"]
+  ],
   actors: [{ name: "Narrator", playable: false, color: "FFFFFF" }],
   colors: ["FFFFFF", "94E495", "85B7A1", "486B8D", "554A6E", "501D47"],
   keys: [],
-  meta: { editorHidden: false, warning: false, warningMessage: "" }
+  editor: true,
+  scale: 1,
+  warning: { status: false, warningMessage: "" }
 }
 
 const store =

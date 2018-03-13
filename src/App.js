@@ -1,8 +1,9 @@
 import React, { Component } from "react"
 import { MuiThemeProvider, getMuiTheme } from "material-ui/styles/"
-import Editor from "./components/Editor"
-import Tree from "./components/Tree"
-import Nav from "./components/Nav"
+import Editor from "./app/Editor"
+import Tree from "./app/Tree"
+import Nav from "./app/Nav"
+import Tooltip from "./app/Tooltip"
 
 const muiTheme = getMuiTheme({
   palette: {
@@ -22,6 +23,7 @@ class App extends Component {
           <Tree />
           <Editor />
           <Nav />
+          <Tooltip />
         </div>
       </MuiThemeProvider>
     )
