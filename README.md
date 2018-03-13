@@ -27,11 +27,13 @@ Dialogue Tree Editor inspired by [twinery](twinery.org) created with React.
 * [x] Delete nodes
 * [x] Place nodes
 * [x] Add links
-* [ ] Delete links
+* [x] Delete/Move links
+* [x] Visual cues for linkable nodes
 * [x] Add actors
 * [x] Delete actors (need to address nodes to actor relationship)
 * [ ] Add custom colours
 * [x] Tooltips (needs to be expanded upon)
+* [ ] Collapsable tree segments
 * [ ] Zoom functionality
 * [ ] Settings and Help tabs
 * [ ] Search funcationality
