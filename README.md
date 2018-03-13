@@ -1,6 +1,6 @@
 # Topiary
 
-Dialogue Tree Editor inspired by [twinery](twinery.org) created with React.
+Dialogue Tree Editor inspired by [twinery](http://www.twinery.org) created with React.
 
 ![Topiary Screenshot](https://github.com/bgk-/topiary/blob/master/docs/topiary.png)
 

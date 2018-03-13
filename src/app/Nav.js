@@ -136,6 +136,7 @@ class Nav extends Component {
             <FontIcon className="material-icons md-48">chat</FontIcon>
           </FloatingActionButton>
           <br />
+
           <Slider
             min={0.2}
             max={1}

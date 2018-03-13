@@ -121,7 +121,8 @@ class Node extends Component {
             body,
             color,
             actor,
-            expanded: this.state.expanded
+            expanded: this.state.expanded,
+            expand: this.handleExpandChange
           }}
         />
         <CardText style={styles.body} expandable>

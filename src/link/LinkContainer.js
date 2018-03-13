@@ -3,6 +3,7 @@ import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import Link from "./Link"
 import { setCurrentLink, deleteLink, setCurrentNode } from "../store/actions"
+import { layers } from "../lib/view"
 
 const styles = {
   linkCreator: {
@@ -10,7 +11,7 @@ const styles = {
     top: 0,
     left: 0,
     pointerEvents: "none",
-    zIndex: 4
+    zIndex: layers.CURRENTARROW
   }
 }
 
