@@ -13,6 +13,7 @@ export const makeGetNode = () =>
     (node, actors, currentNode) => ({
       ...node,
       actor: node.actor !== undefined ? actors[node.actor].name : "",
+      color: node.actor !== undefined ? actors[node.actor].color : "#FFF",
       current: currentNode === node.id
     })
   )

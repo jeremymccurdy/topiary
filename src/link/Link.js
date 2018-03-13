@@ -49,7 +49,10 @@ export default function Link({
     const right = determineEdge(start, end, TR, BR)
     end = top || bottom || left || right
   }
-  const dStr = `M${start.x} ${start.y} L ${end.x} ${end.y}`
+  let dStr
+  if (start && end) {
+    dStr = `M${start.x} ${start.y} L ${end.x} ${end.y}`
+  }
   return (
     <path
       d={dStr}

@@ -70,7 +70,8 @@ class NodeList extends Component {
       currentLink,
       setCurrentNode,
       setCurrentLink,
-      newLink
+      newLink,
+      currentNode
     } = this.props
     return Object.values(nodes).map(n => {
       return (
@@ -91,11 +92,14 @@ class NodeList extends Component {
                 })
                 return setCurrentLink({ status: false })
               }
-              setCurrentNode({ id: n.id })
+              if (currentNode !== n.id) setCurrentNode({ id: n.id })
             }
           }}
           onDrag={(e, data) => this.handleNodePositionAdjust(e, data)}
-          onStop={(e, data) => this.handleNodePositionUpdate(e, data, n.id)}
+          onStop={(e, data) => {
+            if (this.state.xAdjust !== 0 || this.state.yAdjust !== 0)
+              this.handleNodePositionUpdate(e, data, n.id)
+          }}
         >
           <div
             id={n.id}

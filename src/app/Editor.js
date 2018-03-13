@@ -10,6 +10,7 @@ import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import EditTab from "../editor/edit/Edit"
 import ActorTab from "../editor/actor/Actor"
+import HelpTab from "../editor/help/Help"
 import KeyTab from "../editor/key/Key"
 import { toggleEditor } from "../store/actions"
 
@@ -78,9 +79,7 @@ class Editor extends Component {
       <EditTab key={0} />,
       <ActorTab key={1} />,
       <KeyTab key={2} />,
-      <div key={3} style={styles.tabContent}>
-        <h1>Help will go here</h1>
-      </div>,
+      <HelpTab key={3} />,
       <div key={4} style={styles.tabContent}>
         <h1>Settings...</h1>
         <p>eventually</p>

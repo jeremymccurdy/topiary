@@ -66,7 +66,7 @@ class LinkContainer extends Component {
             <marker
               id="arrowhead"
               viewBox="0 0 10 10"
-              refX="10"
+              refX="9"
               refY="5"
               markerWidth="6"
               markerHeight="6"
