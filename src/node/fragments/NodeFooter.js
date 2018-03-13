@@ -35,7 +35,7 @@ export default function NodeFooter({
   collapse,
   adjustWidth,
   updateWidth,
-  setCurrentLink,
+  setFocusedLink,
   deleteAllLinks,
   deleteNode
 }) {
@@ -67,7 +67,7 @@ export default function NodeFooter({
           style={styles.button}
           iconStyle={styles.icon}
           onClick={() =>
-            setCurrentLink({
+            setFocusedLink({
               status: true,
               from: id
             })
@@ -101,7 +101,7 @@ NodeFooter.propTypes = {
   collapse: PropTypes.func.isRequired,
   adjustWidth: PropTypes.func.isRequired,
   updateWidth: PropTypes.func.isRequired,
-  setCurrentLink: PropTypes.func.isRequired,
+  setFocusedLink: PropTypes.func.isRequired,
   deleteAllLinks: PropTypes.func.isRequired,
   deleteNode: PropTypes.func.isRequired
 }

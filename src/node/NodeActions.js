@@ -17,7 +17,7 @@ export const deleteNode = ({ id }) => {
   }
 }
 
-export const setCurrentNode = ({ id }) => ({
+export const setFocusedNode = ({ id }) => ({
   type: "SET_CURRENT_NODE",
   id
 })

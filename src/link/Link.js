@@ -7,10 +7,10 @@ export default function Link({
   to,
   linking,
   mouse,
-  currentNode,
+  FocusedNode,
   deleteLink,
-  setCurrentLink,
-  setCurrentNode
+  setFocusedLink,
+  setFocusedNode
 }) {
   const fromBounds = document.getElementById(from).getBoundingClientRect()
   let toBounds
@@ -57,25 +57,25 @@ export default function Link({
     <path
       d={dStr}
       markerEnd="url(#arrowhead)"
-      stroke={currentNode ? "#558b2f" : "black"}
+      stroke={FocusedNode ? "#558b2f" : "black"}
       strokeWidth="2px"
       fill="none"
       onClick={() => {
-        setCurrentNode({ id: from })
+        setFocusedNode({ id: from })
         deleteLink({ from, to })
-        setCurrentLink({ status: true, from })
+        setFocusedLink({ status: true, from })
       }}
     />
   )
 }
 
 Link.propTypes = {
-  currentNode: PropTypes.bool.isRequired,
+  FocusedNode: PropTypes.bool.isRequired,
   from: PropTypes.string.isRequired,
   to: PropTypes.string,
   linking: PropTypes.bool,
   mouse: PropTypes.object,
   deleteLink: PropTypes.func.isRequired,
-  setCurrentLink: PropTypes.func.isRequired,
-  setCurrentNode: PropTypes.func.isRequired
+  setFocusedLink: PropTypes.func.isRequired,
+  setFocusedNode: PropTypes.func.isRequired
 }

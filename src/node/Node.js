@@ -47,7 +47,7 @@ class Node extends Component {
     pos: PropTypes.array,
     bounds: PropTypes.array,
     updateNode: PropTypes.func.isRequired,
-    setCurrentLink: PropTypes.func.isRequired,
+    setFocusedLink: PropTypes.func.isRequired,
     deleteAllLinks: PropTypes.func.isRequired,
     deleteNode: PropTypes.func.isRequired
   }
@@ -93,7 +93,7 @@ class Node extends Component {
       actor,
       bounds,
       current,
-      setCurrentLink,
+      setFocusedLink,
       deleteAllLinks,
       deleteNode
       // prev,
@@ -134,10 +134,10 @@ class Node extends Component {
             id,
             current,
             expanded: this.state.expanded,
-            isCurrentNode: this.isCurrentNode,
+            isFocusedNode: this.isFocusedNode,
             adjustWidth: this.adjustWidth,
             updateWidth: this.updateWidth,
-            setCurrentLink,
+            setFocusedLink,
             deleteAllLinks,
             deleteNode,
             collapse: () => {

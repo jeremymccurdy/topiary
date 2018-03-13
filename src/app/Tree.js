@@ -4,8 +4,8 @@ import PropTypes from "prop-types"
 import {
   newNode,
   updateNode,
-  setCurrentNode,
-  setCurrentLink,
+  setFocusedNode,
+  setFocusedLink,
   toggleEditor,
   setWarning
 } from "../store/actions"
@@ -41,10 +41,10 @@ class Tree extends Component {
     scale: PropTypes.number.isRequired,
     newNode: PropTypes.func.isRequired,
     updateNode: PropTypes.func.isRequired,
-    setCurrentNode: PropTypes.func.isRequired,
-    setCurrentLink: PropTypes.func.isRequired,
+    setFocusedNode: PropTypes.func.isRequired,
+    setFocusedLink: PropTypes.func.isRequired,
     setWarning: PropTypes.func.isRequired,
-    currentLink: PropTypes.object.isRequired
+    FocusedLink: PropTypes.object.isRequired
   }
 
   state = {
@@ -76,7 +76,7 @@ class Tree extends Component {
   }
 
   render() {
-    const { nodes, currentLink, scale, setCurrentLink } = this.props
+    const { nodes, FocusedLink, scale, setFocusedLink } = this.props
     const boundary = dimensions(Object.values(nodes), scale)
     return (
       <div onMouseMove={this.handleMouse}>
@@ -99,7 +99,7 @@ class Tree extends Component {
                 scale}px, transparent ${1 / scale}px)`
             }}
             onClick={() => {
-              if (currentLink.status) return setCurrentLink({ status: false })
+              if (FocusedLink.status) return setFocusedLink({ status: false })
             }}
           >
             <NodeList />
@@ -111,17 +111,17 @@ class Tree extends Component {
   }
 }
 
-const mapState = ({ scale, nodes, currentLink }) => ({
+const mapState = ({ scale, nodes, FocusedLink }) => ({
   scale,
-  currentLink,
+  FocusedLink,
   nodes
 })
 
 export default connect(mapState, {
   newNode,
   updateNode,
-  setCurrentNode,
+  setFocusedNode,
   toggleEditor,
   setWarning,
-  setCurrentLink
+  setFocusedLink
 })(Tree)

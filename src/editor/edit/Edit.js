@@ -165,8 +165,8 @@ class EditTab extends Component {
 
 const makeMapState = () => {
   const getNode = makeGetNodeByCurrent()
-  return ({ nodes, currentNode, actors }) => ({
-    ...getNode({ nodes, currentNode }),
+  return ({ nodes, FocusedNode, actors }) => ({
+    ...getNode({ nodes, FocusedNode }),
     actors
   })
 }

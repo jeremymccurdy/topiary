@@ -5,7 +5,7 @@ import Node from "./Node"
 import { makeGetNode, makeConnectedNodes } from "../store/selectors"
 import {
   updateNode,
-  setCurrentLink,
+  setFocusedLink,
   deleteAllLinks,
   deleteNode
 } from "../store/actions"
@@ -15,19 +15,19 @@ class NodeContainer extends Component {
     id: PropTypes.string.isRequired,
     node: PropTypes.object,
     updateNode: PropTypes.func.isRequired,
-    setCurrentLink: PropTypes.func.isRequired,
+    setFocusedLink: PropTypes.func.isRequired,
     deleteAllLinks: PropTypes.func.isRequired,
     deleteNode: PropTypes.func.isRequired,
-    currentLink: PropTypes.object.isRequired
+    FocusedLink: PropTypes.object.isRequired
   }
   static defaultProps = {
     node: {}
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.currentLink.status !== this.props.currentLink.status) {
+    if (nextProps.FocusedLink.status !== this.props.FocusedLink.status) {
       const { id, updateNode, node } = this.props
-      if (nextProps.node.id === nextProps.currentLink.from) {
+      if (nextProps.node.id === nextProps.FocusedLink.from) {
         nextProps.node.next.forEach(n => {
           updateNode({ id: n, payload: { linkable: false } })
         })
@@ -42,7 +42,7 @@ class NodeContainer extends Component {
     const {
       node,
       updateNode,
-      setCurrentLink,
+      setFocusedLink,
       deleteNode,
       deleteAllLinks
     } = this.props
@@ -51,7 +51,7 @@ class NodeContainer extends Component {
         {...{
           ...node,
           updateNode,
-          setCurrentLink,
+          setFocusedLink,
           deleteAllLinks,
           deleteNode
         }}
@@ -63,18 +63,18 @@ class NodeContainer extends Component {
 const makeMapState = () => {
   const getNode = makeGetNode()
   const getConnected = makeConnectedNodes()
-  return ({ nodes, actors, currentNode, currentLink, links }, { id }) => ({
+  return ({ nodes, actors, FocusedNode, FocusedLink, links }, { id }) => ({
     node: {
-      ...getNode({ nodes, actors, currentNode }, { id }),
+      ...getNode({ nodes, actors, FocusedNode }, { id }),
       ...getConnected({ links }, { id })
     },
-    currentLink
+    FocusedLink
   })
 }
 
 export default connect(makeMapState, {
   updateNode,
   deleteNode,
-  setCurrentLink,
+  setFocusedLink,
   deleteAllLinks
 })(NodeContainer)

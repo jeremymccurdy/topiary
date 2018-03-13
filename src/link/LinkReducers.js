@@ -1,4 +1,4 @@
-export const currentLink = (state = {}, { type, status, from, to }) => {
+export const FocusedLink = (state = {}, { type, status, from, to }) => {
   if (type === "SET_CURRENT_LINK") {
     return { ...state, status, from, to }
   }

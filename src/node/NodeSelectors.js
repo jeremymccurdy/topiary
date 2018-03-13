@@ -2,25 +2,25 @@ import { createSelector } from "reselect"
 
 const getNodeById = ({ nodes }, { id }) => nodes[id]
 const getId = (_, { id }) => id
-const getCurrentNode = ({ currentNode }) => currentNode
+const getFocusedNode = ({ FocusedNode }) => FocusedNode
 const getNodes = ({ nodes }) => nodes
 const getActors = ({ actors }) => actors
 const getLinks = ({ links }) => links
 
 export const makeGetNode = () =>
   createSelector(
-    [getNodeById, getActors, getCurrentNode],
-    (node, actors, currentNode) => ({
+    [getNodeById, getActors, getFocusedNode],
+    (node, actors, FocusedNode) => ({
       ...node,
       actor: node.actor !== undefined ? actors[node.actor].name : "",
       color: node.actor !== undefined ? actors[node.actor].color : "#FFF",
-      current: currentNode === node.id
+      current: FocusedNode === node.id
     })
   )
 
 export const makeGetNodeByCurrent = () =>
-  createSelector([getNodes, getCurrentNode], (nodes, currentNode) => ({
-    node: nodes[currentNode]
+  createSelector([getNodes, getFocusedNode], (nodes, FocusedNode) => ({
+    node: nodes[FocusedNode]
   }))
 
 export const makeConnectedNodes = () =>

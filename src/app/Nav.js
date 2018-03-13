@@ -12,7 +12,7 @@ import {
 } from "material-ui"
 import { rnd } from "../lib/math"
 import { gridSize } from "../lib/view"
-import { toggleEditor, setCurrentNode, newNode } from "../store/actions"
+import { toggleEditor, setFocusedNode, newNode } from "../store/actions"
 
 const styles = {
   container: {
@@ -51,7 +51,7 @@ const styles = {
 class Nav extends Component {
   static propTypes = {
     toggleEditor: PropTypes.func.isRequired,
-    setCurrentNode: PropTypes.func.isRequired,
+    setFocusedNode: PropTypes.func.isRequired,
     newNode: PropTypes.func.isRequired,
     editor: PropTypes.bool.isRequired,
     scale: PropTypes.number.isRequired
@@ -62,7 +62,7 @@ class Nav extends Component {
   }
 
   handleNewNode = type => {
-    const { newNode, setCurrentNode, scale } = this.props
+    const { newNode, setFocusedNode, scale } = this.props
     const newId = rnd()
     const diffs =
       type === "dialogue"
@@ -94,7 +94,7 @@ class Nav extends Component {
         ...diffs
       }
     })
-    setCurrentNode({ id: newId })
+    setFocusedNode({ id: newId })
   }
 
   render() {
@@ -153,4 +153,4 @@ class Nav extends Component {
 
 const mapState = ({ scale, editor }) => ({ scale, editor })
 
-export default connect(mapState, { toggleEditor, newNode, setCurrentNode })(Nav)
+export default connect(mapState, { toggleEditor, newNode, setFocusedNode })(Nav)

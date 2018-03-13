@@ -15,7 +15,7 @@ export const deleteAllLinks = ({ id }) => ({
   id
 })
 
-export const setCurrentLink = ({ status, from, to }) => ({
+export const setFocusedLink = ({ status, from, to }) => ({
   type: "SET_CURRENT_LINK",
   status,
   from,

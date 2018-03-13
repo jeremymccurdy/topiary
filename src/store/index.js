@@ -4,8 +4,8 @@ import { composeWithDevTools } from "remote-redux-devtools"
 import reducers from "./reducers"
 
 const initialState = {
-  currentNode: "ujGXGykg",
-  currentLink: { status: false, from: "", to: "" },
+  FocusedNode: "ujGXGykg",
+  FocusedLink: { status: false, from: "", to: "" },
   nodes: {
     ujGXGykg: {
       id: "ujGXGykg",

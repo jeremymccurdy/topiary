@@ -4,8 +4,8 @@ import Draggable from "react-draggable"
 import PropTypes from "prop-types"
 import NodeContainer from "./NodeContainer"
 import {
-  setCurrentNode,
-  setCurrentLink,
+  setFocusedNode,
+  setFocusedLink,
   newLink,
   updateNode
 } from "../store/actions"
@@ -30,10 +30,10 @@ class NodeList extends Component {
   static propTypes = {
     scale: PropTypes.number.isRequired,
     nodes: PropTypes.object.isRequired,
-    currentLink: PropTypes.object.isRequired,
-    currentNode: PropTypes.string.isRequired,
-    setCurrentNode: PropTypes.func.isRequired,
-    setCurrentLink: PropTypes.func.isRequired,
+    FocusedLink: PropTypes.object.isRequired,
+    FocusedNode: PropTypes.string.isRequired,
+    setFocusedNode: PropTypes.func.isRequired,
+    setFocusedLink: PropTypes.func.isRequired,
     newLink: PropTypes.func.isRequired,
     updateNode: PropTypes.func.isRequired
   }
@@ -60,18 +60,18 @@ class NodeList extends Component {
     this.setState({ xAdjust: 0, yAdjust: 0 })
   }
 
-  isCurrentNode = id => {
-    return this.props.currentNode === id
+  isFocusedNode = id => {
+    return this.props.FocusedNode === id
   }
 
   render() {
     const {
       nodes,
-      currentLink,
-      setCurrentNode,
-      setCurrentLink,
+      FocusedLink,
+      setFocusedNode,
+      setFocusedLink,
       newLink,
-      currentNode
+      FocusedNode
     } = this.props
     return Object.values(nodes).map(n => {
       return (
@@ -85,14 +85,14 @@ class NodeList extends Component {
           grid={[gridSize, gridSize]}
           onMouseDown={() => {
             if (n.linkable) {
-              if (currentLink.status) {
+              if (FocusedLink.status) {
                 newLink({
-                  from: currentLink.from,
+                  from: FocusedLink.from,
                   to: n.id
                 })
-                return setCurrentLink({ status: false })
+                return setFocusedLink({ status: false })
               }
-              if (currentNode !== n.id) setCurrentNode({ id: n.id })
+              if (FocusedNode !== n.id) setFocusedNode({ id: n.id })
             }
           }}
           onDrag={(e, data) => this.handleNodePositionAdjust(e, data)}
@@ -105,7 +105,7 @@ class NodeList extends Component {
             id={n.id}
             style={{
               ...styles.dragContainer,
-              zIndex: this.isCurrentNode(n.id) ? 10 : 1
+              zIndex: this.isFocusedNode(n.id) ? 10 : 1
             }}
           >
             <NodeContainer id={n.id} />
@@ -122,16 +122,16 @@ class NodeList extends Component {
   }
 }
 
-const mapState = ({ scale, nodes, currentLink, currentNode }) => ({
+const mapState = ({ scale, nodes, FocusedLink, FocusedNode }) => ({
   scale,
   nodes,
-  currentLink,
-  currentNode
+  FocusedLink,
+  FocusedNode
 })
 
 export default connect(mapState, {
-  setCurrentNode,
-  setCurrentLink,
+  setFocusedNode,
+  setFocusedLink,
   newLink,
   updateNode
 })(NodeList)

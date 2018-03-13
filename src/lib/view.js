@@ -11,7 +11,7 @@ export const layers = Object.freeze({
   CURRENTTREE: 7,
   OVERLAY: 8,
   CURRENTARROW: 9,
-  CURRENTNODE: 10
+  FocusedNode: 10
 })
 
 export function dimensions(nodes, scale) {
