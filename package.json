@@ -25,7 +25,7 @@
   },
   "main": "./public/electron.js",
   "build": {
-    "appId": "yourappid",
+    "appId": "topiary",
     "dmg": {
       "contents": [
         {
@@ -41,10 +41,7 @@
       ]
     },
     "linux": {
-      "target": [
-        "AppImage",
-        "deb"
-      ]
+      "target": ["AppImage", "deb"]
     },
     "win": {
       "target": "squirrel",

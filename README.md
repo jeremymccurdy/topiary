@@ -18,12 +18,15 @@ Dialogue Tree Editor inspired by [twinery](http://www.twinery.org) created with 
 * react-dom
 * react-draggable
 * react-redux
+* react-router-dom
 * react-scripts
 * redux
 * reselect
 
 ### To do
 
+* [x] Create new scenes
+* [x] Delete scenes
 * [x] Create new nodes
 * [x] Delete nodes
 * [x] Place nodes
@@ -33,9 +36,14 @@ Dialogue Tree Editor inspired by [twinery](http://www.twinery.org) created with 
 * [x] Add actors
 * [x] Delete actors (need to address nodes to actor relationship)
 * [ ] Add custom colours
+* [ ] Actor Avatars
+* [ ] Items/Variables
 * [x] Tooltips (needs to be expanded upon)
 * [ ] Collapsable tree segments
 * [ ] Zoom functionality
 * [ ] Settings and Help tabs
 * [ ] Search funcationality
+* [x] Persistent State
 * [ ] Load/Save files
+
+* Feel free to open an issue for anything else you'd like to see!
