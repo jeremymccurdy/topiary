@@ -2,6 +2,9 @@ import React from "react"
 import { Card, CardHeader, CardText } from "material-ui"
 
 const styles = {
+  container: {
+    marginTop: 30
+  },
   card: {
     width: "100%",
     boxShadow:
@@ -15,7 +18,7 @@ const styles = {
 
 export default function HelpTab() {
   return (
-    <div>
+    <div style={styles.container}>
       <Card style={styles.card}>
         <CardHeader title={"General"} showExpandableButton actAsExpander />
         <CardText expandable>

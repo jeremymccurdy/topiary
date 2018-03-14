@@ -5,6 +5,7 @@ import { actors, colors } from "../editor/actor/ActorReducers"
 import { editor } from "../editor/edit/EditReducers"
 import { links, FocusedLink } from "../link/LinkReducers"
 import keys from "../editor/key/KeyReducers"
+import { scene } from "../app/NavReducers"
 
 const warning = (state = null, action) => {
   switch (action.type) {
@@ -25,7 +26,11 @@ const scale = (state = 1, { type, scale }) => {
   return state
 }
 
+const id = (state = "") => state
+
 export default combineReducers({
+  id,
+  scene,
   nodes,
   links,
   FocusedNode,

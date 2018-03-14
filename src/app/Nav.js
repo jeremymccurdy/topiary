@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react"
 import { connect } from "react-redux"
+import { Redirect } from "react-router-dom"
 import PropTypes from "prop-types"
 import {
   Toolbar,
@@ -8,11 +9,19 @@ import {
   TextField,
   FloatingActionButton,
   Slider,
-  FontIcon
+  FontIcon,
+  IconButton
 } from "material-ui"
 import { rnd } from "../lib/math"
 import { gridSize } from "../lib/view"
-import { toggleEditor, setFocusedNode, newNode } from "../store/actions"
+import {
+  toggleEditor,
+  setFocusedNode,
+  newNode,
+  updateScene
+} from "../store/actions"
+import { saveState } from "../store/localStorage"
+import { focusedStore } from "../app/Scene"
 
 const styles = {
   container: {
@@ -45,16 +54,26 @@ const styles = {
   },
   button: {
     margin: "5px"
+  },
+  title: {
+    color: "#558b2f"
   }
 }
 
 class Nav extends Component {
   static propTypes = {
     toggleEditor: PropTypes.func.isRequired,
+    updateScene: PropTypes.func.isRequired,
     setFocusedNode: PropTypes.func.isRequired,
     newNode: PropTypes.func.isRequired,
     editor: PropTypes.bool.isRequired,
-    scale: PropTypes.number.isRequired
+    scale: PropTypes.number.isRequired,
+    scene: PropTypes.string.isRequired
+  }
+
+  state = {
+    redirect: "",
+    fileOpen: false
   }
 
   handleZoomSlider = (e, v) => {
@@ -88,35 +107,58 @@ class Nav extends Component {
         title: "untitled",
         tags: [],
         pos: newPos,
+        linkable: true,
+        collapsed: false,
         bounds: [210],
-        prev: [],
-        next: [],
         ...diffs
       }
     })
     setFocusedNode({ id: newId })
   }
 
+  handleSceneUpdate = e => {
+    this.props.updateScene({ scene: e.target.value })
+  }
+
+  handleRequestClose = () => {
+    this.setState({
+      fileOpen: false
+    })
+  }
+
   render() {
-    const { scale } = this.props
+    const { scale, scene } = this.props
     const hideEditor = {
       transform: !this.props.editor ? "translateX(28vw)" : "translateX(0)"
+    }
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />
     }
     return (
       <Fragment>
         <Toolbar style={styles.container}>
           <ToolbarGroup>
-            <ToolbarTitle text="topiary" />
+            <IconButton
+              tooltip="Home"
+              onClick={() => {
+                saveState(focusedStore.getState())
+                this.setState({ redirect: "/" })
+              }}
+            >
+              <FontIcon className="material-icons">home</FontIcon>
+            </IconButton>
+            <ToolbarTitle text="topiary" style={styles.title} />
             <TextField
               name="scene"
               fullWidth
               style={styles.textField}
               textareaStyle={styles.textStyle}
               hintText="Scene"
+              onChange={this.handleSceneUpdate}
+              value={scene}
             />
           </ToolbarGroup>
         </Toolbar>
-
         <div style={{ ...styles.buttonContainer, ...hideEditor }}>
           <FloatingActionButton
             mini={true}
@@ -151,6 +193,15 @@ class Nav extends Component {
   }
 }
 
-const mapState = ({ scale, editor }) => ({ scale, editor })
+const mapState = ({ scale, editor, scene }) => ({
+  scale,
+  editor,
+  scene
+})
 
-export default connect(mapState, { toggleEditor, newNode, setFocusedNode })(Nav)
+export default connect(mapState, {
+  toggleEditor,
+  newNode,
+  setFocusedNode,
+  updateScene
+})(Nav)
