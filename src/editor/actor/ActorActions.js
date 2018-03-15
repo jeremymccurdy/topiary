@@ -14,6 +14,11 @@ export const deleteActor = ({ index }) => ({
   index
 })
 
+export const importActors = ({ actors }) => ({
+  type: "IMPORT_ACTORS",
+  actors
+})
+
 export const newColor = ({ color }) => ({
   type: "NEW_KEY",
   color

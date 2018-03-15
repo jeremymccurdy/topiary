@@ -1,8 +1,20 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
-import { SelectField, TextField, MenuItem, FlatButton } from "material-ui"
-import { newActor, updateActor, deleteActor } from "../../store/actions"
+import {
+  SelectField,
+  TextField,
+  MenuItem,
+  FlatButton,
+  Popover,
+  Menu
+} from "material-ui"
+import {
+  newActor,
+  updateActor,
+  deleteActor,
+  importActors
+} from "../../store/actions"
 
 const styles = {
   textStyle: {
@@ -25,7 +37,8 @@ class ActorTab extends Component {
     colors: PropTypes.arrayOf(PropTypes.string),
     newActor: PropTypes.func.isRequired,
     updateActor: PropTypes.func.isRequired,
-    deleteActor: PropTypes.func.isRequired
+    deleteActor: PropTypes.func.isRequired,
+    importActors: PropTypes.func.isRequired
   }
   static defaultProps = {
     actors: [],
@@ -34,16 +47,26 @@ class ActorTab extends Component {
   state = {
     actorIndex: 0,
     playableValue: false,
-    selectedIndex: 0
+    selectedIndex: 0,
+    importMenu: false
   }
 
   handleNewActor = () => {
     const { newActor, actors } = this.props
-    newActor({ name: "new" })
+    newActor({ actor: { name: "new", playable: false } })
     this.setState({ actorIndex: actors.length })
   }
   handleActorChange = (event, index) => {
     this.setState({ actorIndex: index })
+  }
+
+  handleImportMenu = e => {
+    this.setState({ importMenu: true, anchorEl: e.currentTarget })
+  }
+
+  handleImportActors = id => {
+    const actors = JSON.parse(localStorage.getItem(id)).actors
+    this.props.importActors({ actors })
   }
 
   handleActorNameUpdate = event => {
@@ -73,15 +96,46 @@ class ActorTab extends Component {
     })
   }
 
+  renderImportMenu = () => {
+    let existingScenes = []
+    for (let i = 0; i < localStorage.length; i++) {
+      const scene = JSON.parse(localStorage.getItem(localStorage.key(i))).scene
+      existingScenes.push(
+        <MenuItem
+          primaryText={scene || "untitled scene"}
+          onClick={() => this.handleImportActors(localStorage.key(i))}
+        />
+      )
+    }
+    return existingScenes.sort((a, b) => a.key > b.key)
+  }
+
   render() {
     const { actors, deleteActor, colors } = this.props
-    const { actorIndex } = this.state
+    const { actorIndex, importMenu, anchorEl } = this.state
     const menuItems = actors.map((actor, i) => (
       <MenuItem key={actor.name + i} value={i} primaryText={actor.name} />
     ))
     return (
       <div style={styles.tabContent}>
         <FlatButton label="New" primary={true} onClick={this.handleNewActor} />
+        <FlatButton
+          label="Import"
+          primary={true}
+          onClick={this.handleImportMenu}
+          data-tip={"Import actors from another scene"}
+          data-tippos={"bottom"}
+        />
+        <Popover
+          open={importMenu}
+          anchorEl={anchorEl}
+          onRequestClose={() => this.setState({ importMenu: false })}
+          anchorOrigin={{ horizontal: "left", vertical: "bottom" }}
+          targetOrigin={{ horizontal: "left", vertical: "top" }}
+        >
+          <Menu>{this.renderImportMenu()}</Menu>
+        </Popover>
+
         <FlatButton
           label="Delete"
           primary={true}
@@ -163,6 +217,9 @@ const mapState = ({ actors, colors }) => ({
   colors
 })
 
-export default connect(mapState, { newActor, updateActor, deleteActor })(
-  ActorTab
-)
+export default connect(mapState, {
+  newActor,
+  updateActor,
+  deleteActor,
+  importActors
+})(ActorTab)

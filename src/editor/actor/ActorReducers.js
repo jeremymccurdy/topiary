@@ -1,7 +1,7 @@
-export const actors = (state = [], { type, payload, index, actor }) => {
+export const actors = (state = [], { type, index, actor, actors }) => {
   switch (type) {
     case "NEW_ACTOR":
-      return [...state, payload]
+      return [...state, actor]
     case "UPDATE_ACTOR":
       return Object.assign([...state], {
         [index]: Object.assign({}, state[index], {
@@ -10,6 +10,8 @@ export const actors = (state = [], { type, payload, index, actor }) => {
       })
     case "DELETE_ACTOR":
       return state.filter((actor, i) => i !== index)
+    case "IMPORT_ACTORS":
+      return actors
     default:
       return state
   }
