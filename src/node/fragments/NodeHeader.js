@@ -44,7 +44,8 @@ export default function NodeHeader({
         fontWeight: "bold",
         padding: 10,
         backgroundColor: `#${color}`,
-        width: "100%"
+        width: "100%",
+        cursor: "move"
       }}
       titleStyle={type === "choice" ? styles.choicesTitle : styles.title}
       textStyle={{ display: "block", padding: 0 }}
