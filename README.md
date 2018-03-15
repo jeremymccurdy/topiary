@@ -23,7 +23,7 @@ Dialogue Tree Editor inspired by [twinery](http://www.twinery.org) created with 
 * redux
 * reselect
 
-### To do
+### V0.1
 
 * [x] Create new scenes
 * [x] Delete scenes
@@ -35,17 +35,27 @@ Dialogue Tree Editor inspired by [twinery](http://www.twinery.org) created with 
 * [x] Visual cues for linkable nodes
 * [x] Add actors
 * [x] Delete actors (need to address nodes to actor relationship)
-* [ ] Add custom colours
-* [ ] Actor Avatars
-* [ ] Items/Variables
 * [x] Tooltips (needs to be expanded upon)
 * [ ] Collapsable tree segments
 * [ ] Zoom functionality
 * [ ] Settings and Help tabs
 * [ ] Search funcationality
 * [x] Persistent State
-* [ ] Load/Save scenes
+* [x] Load/Save scenes
 * [ ] Export scenes
 * [ ] Deploy working example
+
+### V0.2
+
+* [ ] Items/Variables
+* [ ] Actor Avatars
+* [ ] Add custom colours
+* [ ] Play test conversation
+* [ ] Hotkeys
+
+### V0.3
+
+* [ ] Custom node/actor fields
+* [ ] Custom hotkeys
 
 * Feel free to open an issue for anything else you'd like to see!
