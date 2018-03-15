@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import { Redirect } from "react-router-dom"
 import { List, ListItem, FontIcon, IconButton } from "material-ui"
 import initialScene from "../store/initialScene"
+import { saveFile, loadFile } from "../store/localStorage"
 import { rnd } from "../lib/math"
 
 const styles = {
@@ -19,7 +20,7 @@ const styles = {
     padding: "16px",
     textDecoration: "none"
   },
-  trash: {
+  rightButtons: {
     position: "absolute",
     right: "20vw"
   }
@@ -32,6 +33,7 @@ export default class Landing extends Component {
     remainigSpace: 0,
     redirect: ""
   }
+
   newScene = () => {
     const id = rnd()
     localStorage.setItem(id, JSON.stringify(initialScene(id)))
@@ -54,13 +56,20 @@ export default class Landing extends Component {
           innerDivStyle={styles.option}
           onClick={() => this.setState({ redirect: localStorage.key(i) })}
           rightIconButton={
-            <IconButton
-              style={styles.trash}
-              iconStyle={styles.icon}
-              onClick={() => this.deleteScene(localStorage.key(i))}
-            >
-              <FontIcon className="material-icons">delete</FontIcon>
-            </IconButton>
+            <div style={styles.rightButtons}>
+              <IconButton
+                iconStyle={styles.icon}
+                onClick={() => saveFile(scene, localStorage.key(i))}
+              >
+                <FontIcon className="material-icons">save</FontIcon>
+              </IconButton>
+              <IconButton
+                iconStyle={styles.icon}
+                onClick={() => this.deleteScene(localStorage.key(i))}
+              >
+                <FontIcon className="material-icons">delete</FontIcon>
+              </IconButton>
+            </div>
           }
         />
       )
@@ -98,6 +107,21 @@ export default class Landing extends Component {
             innerDivStyle={styles.option}
             onClick={this.newScene}
           />
+          <ListItem
+            primaryText="load"
+            innerDivStyle={styles.option}
+            containerElement="label"
+          >
+            <input
+              type="file"
+              onChange={e => {
+                loadFile(e, () => {
+                  this.setState({ scenes: this.renderScenes() })
+                })
+              }}
+              style={{ display: "none" }}
+            />
+          </ListItem>
           {this.state.scenes}
         </List>
       </div>

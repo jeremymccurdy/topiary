@@ -44,6 +44,8 @@ Dialogue Tree Editor inspired by [twinery](http://www.twinery.org) created with 
 * [ ] Settings and Help tabs
 * [ ] Search funcationality
 * [x] Persistent State
-* [ ] Load/Save files
+* [ ] Load/Save scenes
+* [ ] Export scenes
+* [ ] Deploy working example
 
 * Feel free to open an issue for anything else you'd like to see!
