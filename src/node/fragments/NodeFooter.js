@@ -21,7 +21,8 @@ const styles = {
     width: 14,
     height: 14,
     padding: 0,
-    margin: 0
+    margin: 0,
+    transition: "none"
   },
   icon: {
     fontSize: 14
@@ -49,20 +50,22 @@ export default function NodeFooter({
             : "#FFFFFF"
         }}
       >
-        {expanded && (
-          <IconButton
-            style={styles.button}
-            iconStyle={styles.icon}
-            onClick={() => {
-              deleteAllLinks({ id })
-              deleteNode({ id })
-            }}
-            data-tip={"Delete"}
-            data-tippos={"bottom"}
-          >
-            <FontIcon className="material-icons">delete</FontIcon>
-          </IconButton>
-        )}
+        <IconButton
+          style={{
+            ...styles.button,
+            opacity: expanded ? "100" : "0",
+            pointerEvents: expanded ? "auto" : "none"
+          }}
+          iconStyle={styles.icon}
+          onClick={() => {
+            deleteAllLinks({ id })
+            deleteNode({ id })
+          }}
+          data-tip={"Delete"}
+          data-tippos={"bottom"}
+        >
+          <FontIcon className="material-icons">delete</FontIcon>
+        </IconButton>
         <IconButton
           style={styles.button}
           iconStyle={styles.icon}

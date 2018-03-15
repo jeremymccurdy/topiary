@@ -1,4 +1,6 @@
 import React, { Component } from "react"
+import { connect } from "react-redux"
+import PropTypes from "prop-types"
 
 const styles = {
   container: {
@@ -10,7 +12,6 @@ const styles = {
     margin: "0px",
     padding: "5px",
     color: "#FFFFFF",
-    textAlign: "center",
     pointerEvents: "none"
   },
   tip: {
@@ -51,7 +52,14 @@ const positions = {
   }
 }
 
-export default class Tooltip extends Component {
+class Tooltip extends Component {
+  static propTypes = {
+    nodes: PropTypes.object
+  }
+
+  static defaultProps = {
+    nodes: {}
+  }
   state = {
     position: "",
     tip: "",
@@ -61,19 +69,40 @@ export default class Tooltip extends Component {
   }
 
   componentDidMount() {
-    const elems = document.querySelectorAll("[data-tip]")
-    elems.forEach(elem => {
-      elem.addEventListener("mouseenter", this.listener(elem))
-      elem.addEventListener("mouseleave", this.listener(elem))
-    })
+    this.addListeners()
   }
 
   componentWillUnmount() {
+    this.removeListeners()
+  }
+
+  removeListeners = () => {
     const elems = document.querySelectorAll("[data-tip]")
     elems.forEach(elem => {
       elem.removeEventListener("mouseenter", this.listener(elem))
-      elem.removeEventListener("mouseleave", this.listener(elem))
+      elem.removeEventListener("mouseout", this.listener(elem))
     })
+  }
+
+  addListeners = () => {
+    const elems = document.querySelectorAll("[data-tip]")
+    const obsConfig = { childList: true, subtree: true }
+    elems.forEach(elem => {
+      elem.addEventListener("mouseenter", this.listener(elem))
+      elem.addEventListener("mouseout", this.listener(elem))
+      const observer = new MutationObserver(this.hide)
+      observer.observe(elem.parentElement, obsConfig)
+    })
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      Object.keys(this.props.nodes).length !==
+      Object.keys(prevProps.nodes).length
+    ) {
+      this.removeListeners()
+      this.addListeners()
+    }
   }
 
   listener = elem => {
@@ -91,6 +120,10 @@ export default class Tooltip extends Component {
       })
     }
     return handleVisibility
+  }
+
+  hide = () => {
+    this.setState({ visible: false })
   }
 
   render() {
@@ -116,3 +149,6 @@ export default class Tooltip extends Component {
     )
   }
 }
+
+const mapState = ({ nodes }) => ({ nodes })
+export default connect(mapState)(Tooltip)
