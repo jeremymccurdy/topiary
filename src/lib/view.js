@@ -40,3 +40,16 @@ export function dimensions(nodes, scale) {
     height: height + "px"
   }
 }
+
+export const brightness = h => {
+  const [r, g, b] = hexToRGB(h)
+  return Math.sqrt(r * r * 0.299 + g * g * 0.587 + b * b * 0.114)
+}
+
+function hexToRGB(hex) {
+  if (hex[0] === "#") hex = hex.substr(1)
+  const r = parseInt(hex.slice(0, 2), 16)
+  const g = parseInt(hex.slice(2, 4), 16)
+  const b = parseInt(hex.slice(4, 6), 16)
+  return [r, g, b]
+}

@@ -1,6 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
 import { CardHeader, FontIcon } from "material-ui"
+import { brightness } from "../../lib/view"
 
 const styles = {
   title: {
@@ -33,11 +34,13 @@ export default function NodeHeader({
   expanded,
   expand
 }) {
+  const titleS = type === "choice" ? styles.choicesTitle : styles.title
+  const fontColor = brightness(color) > 165 ? "#000" : "#EEE"
   return (
     <CardHeader
       title={type === "dialogue" ? title : expanded ? "" : body}
       subtitle={actor}
-      subtitleStyle={styles.subtitle}
+      subtitleStyle={{ ...styles.subtitle, color: fontColor }}
       showExpandableButton
       actAsExpander
       style={{
@@ -47,7 +50,10 @@ export default function NodeHeader({
         width: "100%",
         cursor: "move"
       }}
-      titleStyle={type === "choice" ? styles.choicesTitle : styles.title}
+      titleStyle={{
+        ...titleS,
+        color: fontColor
+      }}
       textStyle={{ display: "block", padding: 0 }}
       className={"draggable"}
     >

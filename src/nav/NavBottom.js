@@ -1,10 +1,20 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
-import { FloatingActionButton, Slider, FontIcon } from "material-ui"
+import {
+  FloatingActionButton,
+  FontIcon,
+  IconButton,
+  TextField
+} from "material-ui"
 import { rnd } from "../lib/math"
 import { gridSize } from "../lib/view"
-import { toggleEditor, setFocusedNode, newNode } from "../store/actions"
+import {
+  toggleEditor,
+  setFocusedNode,
+  newNode,
+  updateSearch
+} from "../store/actions"
 
 const styles = {
   icon: {
@@ -15,14 +25,28 @@ const styles = {
   },
   buttonContainer: {
     position: "fixed",
-    left: "calc(70vw - 140px)",
-    top: "calc(100vh - 100px)",
+    left: "calc(70vw - 60px)",
+    top: "calc(100vh - 160px)",
     transition: "transform 900ms cubic-bezier(0.445, 0.05, 0.55, 0.95) 0ms",
-    display: "inline",
-    margin: 0
+    display: "flex",
+    flexDirection: "column",
+    marginLeft: "auto"
   },
   button: {
-    margin: "5px"
+    margin: "5px",
+    boxShadow: "none",
+    marginLeft: "auto"
+  },
+  searchContainer: {
+    display: "inline"
+  },
+  searchField: {
+    position: "fixed",
+    left: "-10vw",
+    width: "10vw"
+  },
+  textStyle: {
+    textAlign: "right"
   }
 }
 
@@ -30,17 +54,17 @@ class NavBottom extends Component {
   static propTypes = {
     toggleEditor: PropTypes.func.isRequired,
     setFocusedNode: PropTypes.func.isRequired,
+    updateSearch: PropTypes.func.isRequired,
     newNode: PropTypes.func.isRequired,
     editor: PropTypes.bool.isRequired,
-    scale: PropTypes.number.isRequired
+    scale: PropTypes.number.isRequired,
+    search: PropTypes.object.isRequired
   }
 
   state = {
-    redirect: ""
-  }
-
-  handleZoomSlider = (e, v) => {
-    this.setState({ scale: v })
+    redirect: "",
+    searchVisible: false,
+    searchText: ""
   }
 
   handleNewNode = type => {
@@ -79,52 +103,80 @@ class NavBottom extends Component {
     setFocusedNode({ id: newId })
   }
 
+  handleSearchButton = () => {
+    const { search, updateSearch } = this.props
+    updateSearch({ search: { status: !search.status } })
+  }
+
+  handleSearchText = e => {
+    this.props.updateSearch({ search: { text: e.target.value } })
+  }
+
   render() {
-    const { scale } = this.props
+    const { search } = this.props
     const hideEditor = {
       transform: !this.props.editor ? "translateX(28vw)" : "translateX(0)"
     }
     return (
       <div style={{ ...styles.buttonContainer, ...hideEditor }}>
         <FloatingActionButton
-          mini={true}
-          onClick={() => this.handleNewNode("choice")}
-          style={styles.button}
-          secondary
-          data-tip={"New Choice"}
-        >
-          <FontIcon className="material-icons">question_answer</FontIcon>
-        </FloatingActionButton>
-        <FloatingActionButton
+          mini
           style={styles.button}
           onClick={() => this.handleNewNode("dialogue")}
           secondary
           data-tip={"New Dialogue"}
+          data-tippos={"left"}
         >
           <FontIcon className="material-icons md-48">chat</FontIcon>
         </FloatingActionButton>
-        <br />
 
-        <Slider
-          min={0.2}
-          max={1}
-          // step={zoomStep}
-          value={scale}
-          onChange={this.handleZoomSlider}
-          sliderStyle={{ marginTop: "5px" }}
-        />
+        <FloatingActionButton
+          tooltip="Choice"
+          mini
+          onClick={() => this.handleNewNode("choice")}
+          style={styles.button}
+          secondary
+          data-tip={"New Choice"}
+          data-tippos={"left"}
+        >
+          <FontIcon className="material-icons">question_answer</FontIcon>
+        </FloatingActionButton>
+        <div style={styles.searchContainer}>
+          <TextField
+            name="search"
+            fullWidth
+            style={{
+              ...styles.searchField,
+              display: search.status ? "block" : "none"
+            }}
+            textareaStyle={styles.textStyle}
+            hintText="Search"
+            onChange={this.handleSearchText}
+            value={search.text}
+          />
+          <IconButton
+            onClick={this.handleSearchButton}
+            // Fix styling
+            data-tip={"Search"}
+            data-tippos={"left"}
+          >
+            <FontIcon className="material-icons">search</FontIcon>
+          </IconButton>
+        </div>
       </div>
     )
   }
 }
 
-const mapState = ({ scale, editor }) => ({
+const mapState = ({ scale, editor, search }) => ({
   scale,
-  editor
+  editor,
+  search
 })
 
 export default connect(mapState, {
   toggleEditor,
   newNode,
-  setFocusedNode
+  setFocusedNode,
+  updateSearch
 })(NavBottom)

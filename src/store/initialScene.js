@@ -5,6 +5,7 @@ export default function(id) {
   return {
     id,
     scene: "",
+    search: { status: false, text: "" },
     FocusedNode: nodeId,
     FocusedLink: { status: false, from: "", to: "" },
     nodes: {

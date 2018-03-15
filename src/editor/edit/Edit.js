@@ -80,11 +80,11 @@ class EditTab extends Component {
   }
 
   render() {
-    const { node = {}, actors } = this.props
+    const { node = {}, actors = [] } = this.props
     const {
       type = "",
       title = "",
-      actor = "",
+      actor = 0,
       body = "",
       tags = [],
       conditions = ""
@@ -117,7 +117,7 @@ class EditTab extends Component {
             onChange={e => this.handleTextUpdate(e, "title")}
           />
         )}
-        {type === "dialogues" && (
+        {type === "dialogue" && (
           <SelectField
             name="actor"
             fullWidth

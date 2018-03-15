@@ -35,7 +35,8 @@ class NodeList extends Component {
     setFocusedNode: PropTypes.func.isRequired,
     setFocusedLink: PropTypes.func.isRequired,
     newLink: PropTypes.func.isRequired,
-    updateNode: PropTypes.func.isRequired
+    updateNode: PropTypes.func.isRequired,
+    search: PropTypes.object.isRequired
   }
 
   state = {
@@ -62,6 +63,26 @@ class NodeList extends Component {
 
   isFocusedNode = id => {
     return this.props.FocusedNode === id
+  }
+
+  isInSearch = (body, title, tags) => {
+    const { search: { text, status } } = this.props
+    if (!status || !text) return {}
+    const t = text.toLowerCase()
+    if (
+      body.toLowerCase().includes(t) ||
+      title.toLowerCase().includes(t) ||
+      tags
+        .join(" ")
+        .toLowerCase()
+        .includes(t)
+    ) {
+      return {
+        boxShadow: "0 0 20px 5px rgba(85,139,47, 0.5)",
+        borderRadius: "4px"
+      }
+    }
+    return {}
   }
 
   render() {
@@ -105,6 +126,7 @@ class NodeList extends Component {
             id={n.id}
             style={{
               ...styles.dragContainer,
+              ...this.isInSearch(n.body, n.title, n.tags),
               zIndex: this.isFocusedNode(n.id) ? 10 : 1
             }}
           >
@@ -122,11 +144,12 @@ class NodeList extends Component {
   }
 }
 
-const mapState = ({ scale, nodes, FocusedLink, FocusedNode }) => ({
+const mapState = ({ scale, nodes, FocusedLink, FocusedNode, search }) => ({
   scale,
   nodes,
   FocusedLink,
-  FocusedNode
+  FocusedNode,
+  search
 })
 
 export default connect(mapState, {

@@ -7,6 +7,7 @@ const store = id => {
   const initialState = JSON.parse(localStorage.getItem(id)) || {
     id,
     scene: "",
+    search: { status: false, text: "" },
     FocusedNode: "",
     FocusedLink: { status: false, from: "", to: "" },
     nodes: {},

@@ -13,7 +13,7 @@ export const makeGetNode = () =>
     (node, actors, FocusedNode) => ({
       ...node,
       actor: node.actor !== undefined ? actors[node.actor].name : "",
-      color: node.actor !== undefined ? actors[node.actor].color : "#FFF",
+      color: node.actor !== undefined ? actors[node.actor].color : "#FFFFFF",
       current: FocusedNode === node.id
     })
   )
