@@ -95,7 +95,8 @@ class NavBottom extends Component {
         tags: [],
         pos: newPos,
         linkable: true,
-        collapsed: false,
+        collapsed: { status: false, pos: [], bounds: [] },
+        conditions: "",
         bounds: [210],
         ...diffs
       }

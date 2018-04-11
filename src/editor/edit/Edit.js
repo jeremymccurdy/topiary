@@ -37,6 +37,12 @@ class EditTab extends Component {
     tagsField: ""
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.node.body === this.props.node.body) return
+    // console.log(this.bodyTextField)
+    this.bodyTextField.focus()
+  }
+
   handleTagsUpdate = event => {
     this.setState({ tagsField: this.state.tagsField + event.key })
     const { updateNode, node } = this.props
@@ -149,7 +155,9 @@ class EditTab extends Component {
           onChange={e => this.handleTextUpdate(e, "conditions")}
         />
         <TextField
-          name="body"
+          name="bodyText"
+          id="bodyTextField"
+          ref={ref => (this.bodyTextField = ref)}
           multiLine
           fullWidth
           textareaStyle={styles.textStyle}

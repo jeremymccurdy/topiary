@@ -2,6 +2,8 @@
   "name": "dtree",
   "version": "0.1.0",
   "private": true,
+  "license": "GPL3.0",
+  "author": "blake grayson kehler",
   "dependencies": {
     "file-saver": "^1.3.3",
     "material-ui": "^0.20.0",
@@ -42,10 +44,7 @@
       ]
     },
     "linux": {
-      "target": [
-        "AppImage",
-        "deb"
-      ]
+      "target": ["AppImage", "deb"]
     },
     "win": {
       "target": "squirrel",

@@ -18,6 +18,7 @@ const styles = {
 class LinkContainer extends Component {
   static propTypes = {
     links: PropTypes.array.isRequired,
+    nodes: PropTypes.object.isRequired,
     FocusedLink: PropTypes.object.isRequired,
     FocusedNode: PropTypes.string.isRequired,
     mouseEvent: PropTypes.object.isRequired,
@@ -29,6 +30,7 @@ class LinkContainer extends Component {
   state = {
     mounted: false
   }
+
   componentDidMount() {
     this.setState({ mounted: true })
   }
@@ -44,21 +46,27 @@ class LinkContainer extends Component {
       mouseEvent,
       setFocusedLink,
       setFocusedNode,
-      deleteLink
+      deleteLink,
+      nodes
     } = this.props
     const { mounted } = this.state
-    const linkList = links.map(link => (
-      <Link
-        key={`${link[0]}-${link[1]}`}
-        from={link[0]}
-        to={link[1]}
-        FocusedNode={this.isFocusedNode(link[0])}
-        setFocusedLink={setFocusedLink}
-        setFocusedNode={setFocusedNode}
-        deleteLink={deleteLink}
-      />
-    ))
-
+    const linkList = links.map(link => {
+      return (
+        <Link
+          key={`${link[0]}-${link[1]}`}
+          from={link[0]}
+          to={link[1]}
+          FocusedNode={this.isFocusedNode(link[0])}
+          setFocusedLink={setFocusedLink}
+          setFocusedNode={setFocusedNode}
+          deleteLink={deleteLink}
+          status={nodes[link[0]].collapsed.status}
+        />
+      )
+    })
+    if (!mounted) {
+      return null
+    }
     return (
       <Fragment>
         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
@@ -75,7 +83,7 @@ class LinkContainer extends Component {
               <path d="M 0 0 L 10 5 L 0 10 z" />
             </marker>
           </defs>
-          {mounted && linkList}
+          {linkList}
         </svg>
         {FocusedLink.status && (
           <svg
@@ -114,10 +122,18 @@ class LinkContainer extends Component {
   }
 }
 
-const mapState = ({ links, FocusedLink, FocusedNode }) => ({
+const mapState = ({
+  nodes,
   links,
   FocusedLink,
-  FocusedNode
+  FocusedNode,
+  collapseLink
+}) => ({
+  nodes,
+  links,
+  FocusedLink,
+  FocusedNode,
+  collapseLink
 })
 
 export default connect(mapState, {

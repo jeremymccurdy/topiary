@@ -8,9 +8,17 @@ import { rnd } from "../lib/math"
 const styles = {
   name: {
     fontSize: 62,
-    margin: "5vh auto 5vh auto",
+    margin: "5vh auto",
     textAlign: "center",
     color: "#558b2f"
+  },
+  version: {
+    fontSize: "8px",
+    width: "0px",
+    display: "inline",
+    position: "absolute",
+    margin: "5vh 0px",
+    color: "#000000"
   },
   space: {
     textAlign: "center"
@@ -95,7 +103,10 @@ export default class Landing extends Component {
     }
     return (
       <div>
-        <div style={styles.name}> topiary </div>
+        <div style={styles.name}>
+          topiary<div style={styles.version}>v.0.0.15 alpha</div>
+        </div>
+
         <div style={styles.space}>
           {`Used: ${this.state.usedSpace} | Remaining: ${
             this.state.remainingSpace

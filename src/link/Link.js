@@ -10,8 +10,10 @@ export default function Link({
   FocusedNode,
   deleteLink,
   setFocusedLink,
-  setFocusedNode
+  setFocusedNode,
+  status
 }) {
+  if (status) return null
   const fromBounds = document.getElementById(from).getBoundingClientRect()
   let toBounds
   const start = {
@@ -77,5 +79,6 @@ Link.propTypes = {
   mouse: PropTypes.object,
   deleteLink: PropTypes.func.isRequired,
   setFocusedLink: PropTypes.func.isRequired,
-  setFocusedNode: PropTypes.func.isRequired
+  setFocusedNode: PropTypes.func.isRequired,
+  status: PropTypes.bool.isRequired
 }

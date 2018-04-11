@@ -39,7 +39,7 @@ Dialogue Tree Editor inspired by [twinery](http://www.twinery.org) created with 
 * [ ] Collapsable tree segments
 * [ ] Zoom functionality
 * [ ] Settings and Help tabs
-* [ ] Search funcationality
+* [x] Search funcationality
 * [x] Persistent State
 * [x] Load/Save scenes
 * [ ] Export scenes

@@ -18,7 +18,7 @@ export default function(id) {
         pos: [910, 90],
         bounds: [210],
         linkable: true,
-        collapsed: false,
+        collapsed: { status: false, pos: [], bounds: [] },
         actor: 0,
         conditions: ""
       }

@@ -42,14 +42,16 @@ class NodeList extends Component {
   state = {
     xAdjust: 0,
     yAdjust: 0,
-    nonLinkables: []
+    nonLinkables: [],
+    dragging: false
   }
 
   handleNodePositionAdjust(event, data) {
     const { scale } = this.props
     this.setState({
       xAdjust: data.deltaX / scale,
-      yAdjust: data.deltaY / scale
+      yAdjust: data.deltaY / scale,
+      dragging: true
     })
   }
 
@@ -58,7 +60,7 @@ class NodeList extends Component {
       id,
       payload: { pos: [data.lastX, data.lastY] }
     })
-    this.setState({ xAdjust: 0, yAdjust: 0 })
+    this.setState({ xAdjust: 0, yAdjust: 0, dragging: false })
   }
 
   isFocusedNode = id => {
@@ -78,7 +80,7 @@ class NodeList extends Component {
         .includes(t)
     ) {
       return {
-        boxShadow: "0 0 20px 5px rgba(85,139,47, 0.5)",
+        boxShadow: `0 0 20px 5px rgba(0,40,0,0.5)`,
         borderRadius: "4px"
       }
     }
@@ -95,12 +97,20 @@ class NodeList extends Component {
       FocusedNode
     } = this.props
     return Object.values(nodes).map(n => {
+      let x, y
+      if (n.collapsed.status) {
+        x = n.collapsed.pos[0]
+        y = n.collapsed.pos[1]
+      } else {
+        x = Math.round(n.pos[0] / gridSize) * gridSize
+        y = Math.round(n.pos[1] / gridSize) * gridSize
+      }
       return (
         <Draggable
           key={n.id}
           position={{
-            x: Math.round(n.pos[0] / gridSize) * gridSize,
-            y: Math.round(n.pos[1] / gridSize) * gridSize
+            x,
+            y
           }}
           handle=".draggable"
           grid={[gridSize, gridSize]}
@@ -113,7 +123,9 @@ class NodeList extends Component {
                 })
                 return setFocusedLink({ status: false })
               }
-              if (FocusedNode !== n.id) setFocusedNode({ id: n.id })
+              if (FocusedNode !== n.id) {
+                setFocusedNode({ id: n.id })
+              }
             }
           }}
           onDrag={(e, data) => this.handleNodePositionAdjust(e, data)}
@@ -127,7 +139,10 @@ class NodeList extends Component {
             style={{
               ...styles.dragContainer,
               ...this.isInSearch(n.body, n.title, n.tags),
-              zIndex: this.isFocusedNode(n.id) ? 10 : 1
+              zIndex: this.isFocusedNode(n.id) ? 10 : 1,
+              transition: this.state.dragging
+                ? "none"
+                : "all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms"
             }}
           >
             <NodeContainer id={n.id} />

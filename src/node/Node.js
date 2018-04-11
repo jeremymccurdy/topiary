@@ -46,6 +46,7 @@ class Node extends Component {
     next: PropTypes.array,
     pos: PropTypes.array,
     bounds: PropTypes.array,
+    collapsed: PropTypes.object.isRequired,
     updateNode: PropTypes.func.isRequired,
     setFocusedLink: PropTypes.func.isRequired,
     deleteAllLinks: PropTypes.func.isRequired,
@@ -61,12 +62,48 @@ class Node extends Component {
   }
   state = {
     expanded: true,
-    collapsed: false,
     widthAdjustment: 0
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.collapsed.status === prevProps.collapsed.status) return
+    const { next, updateNode, collapsed } = this.props
+    next.forEach(n => {
+      updateNode({
+        id: n,
+        payload: {
+          collapsed: { ...collapsed }
+        }
+      })
+    })
   }
 
   handleExpandChange = expanded => {
     this.setState({ expanded })
+  }
+
+  handleCollapse = () => {
+    const { pos, id, updateNode, next, collapsed } = this.props
+    updateNode({
+      id,
+      payload: {
+        collapsed: {
+          status: !collapsed.status,
+          pos
+        }
+      }
+    })
+    next.forEach(n => {
+      updateNode({
+        id: n,
+        payload: {
+          collapsed: {
+            status: !collapsed.status,
+            pos: [pos[0] + 5, pos[1] + 5]
+          }
+        }
+      })
+    })
   }
 
   adjustWidth = (event, data) => {
@@ -96,8 +133,6 @@ class Node extends Component {
       setFocusedLink,
       deleteAllLinks,
       deleteNode
-      // prev,
-      // next
     } = this.props
     const { widthAdjustment } = this.state
     const chipTags = tags.map(tag => (
@@ -140,9 +175,7 @@ class Node extends Component {
             setFocusedLink,
             deleteAllLinks,
             deleteNode,
-            collapse: () => {
-              this.setState({ collapsed: !this.state.collapsed })
-            }
+            collapse: this.handleCollapse
           }}
         />
       </Card>
